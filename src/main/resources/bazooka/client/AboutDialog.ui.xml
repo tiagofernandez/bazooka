@@ -1,0 +1,21 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:g='urn:import:com.google.gwt.user.client.ui'
+  xmlns:bazooka='urn:import:bazooka.client'>
+
+  <ui:style src="Bazooka.css"/>
+
+  <g:DockPanel>
+
+    <g:Dock direction="CENTER">
+      <g:HTML styleName="{style.aboutText}">
+        Wrote by Tiago Fernandez (2009) http://tiagofernandez.blogspot.com
+      </g:HTML>
+    </g:Dock>
+
+    <g:Dock direction="SOUTH">
+      <g:Button text="Close" ui:field="closeButton" />
+    </g:Dock>
+
+  </g:DockPanel>
+
+</ui:UiBinder>

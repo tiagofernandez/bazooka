@@ -1,0 +1,20 @@
+<ui:UiBinder
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:g='urn:import:com.google.gwt.user.client.ui'
+  xmlns:bazooka='urn:import:bazooka.client'>
+
+  <ui:style src="Bazooka.css"/>
+
+  <g:HTMLPanel>
+    <div class="{style.banner}">
+      <div>
+        <b class="{style.title}">Bazooka</b>
+      </div>
+      <div>
+        <g:Anchor href='javascript:;' ui:field='aboutLink'>About</g:Anchor>
+      </div>
+    </div>
+    <div class='{style.logo}'/>
+  </g:HTMLPanel>
+
+</ui:UiBinder>

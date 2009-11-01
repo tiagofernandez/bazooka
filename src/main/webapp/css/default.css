@@ -1,0 +1,45 @@
+body, table {
+  font-size: small;
+}
+
+body {
+  background: #fff;
+  color: black;
+  font-family: Helvetica, Arial, sans-serif;
+  margin: 8px;
+  margin-top: 3px;
+}
+
+a {
+  color: #000;
+}
+
+a:visited {
+  color: #000;
+}
+
+.gwt-DialogBox {
+  background-color: white;
+}
+
+.gwt-DialogBox .Caption {
+  background: url(../images/gradient.gif) repeat-x 0px -1px;
+  font-weight: normal;
+  cursor: default;
+  padding: 5px 10px;
+  border: 1px solid #666;
+  text-align: left;
+}
+
+.gwt-DialogBox .dialogContent {
+  border: 1px solid #666;
+  border-top: 0;
+}
+
+.gwt-DialogBox td {
+  text-align: right;
+}
+
+.gwt-DialogBox .gwt-Button {
+  margin: 10px;
+}

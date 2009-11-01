@@ -1,0 +1,38 @@
+<ui:UiBinder
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:g='urn:import:com.google.gwt.user.client.ui'
+  xmlns:bazooka='urn:import:bazooka.client'>
+
+  <ui:style src="Bazooka.css"/>  
+
+  <g:ScrollPanel>
+    <g:VerticalPanel styleName="{style.content}">
+
+      <g:HTMLPanel ui:field="scriptPanel" visible="false">
+        <div class="{style.section}">Script</div>
+        <div style="padding-top: 1em;">
+          <g:Button ui:field="saveScriptButton">Save</g:Button>
+        </div>
+        <div class="{style.textWrapper}" ui:field="scriptTextAreaDiv"/>
+      </g:HTMLPanel>
+
+      <g:HTMLPanel ui:field="messagePanel" visible="true">
+        <div class="{style.section}">Action</div>
+        <div style="padding-top: 0.8em;">
+          <b>Request:</b>
+          <g:ListBox ui:field="requestList" visibleItemCount="1" selectedIndex="0"/>
+          <g:Button ui:field="deleteRequestButton" enabled="false">Delete</g:Button>
+        </div>
+        <div class="{style.textWrapper}" ui:field="requestTextAreaDiv"/>
+        <div style="padding-top: 0.8em;">
+          <g:Button ui:field="saveRequestAsButton">Save as</g:Button>
+          <g:Button ui:field="shootButton">Take a shot</g:Button>
+        </div>
+        <div style="padding-top: 1.8em;"><b>Response:</b></div>
+        <div class="{style.textWrapper}" ui:field="responseTextAreaDiv"/>
+      </g:HTMLPanel>
+
+    </g:VerticalPanel>
+  </g:ScrollPanel>
+
+</ui:UiBinder>

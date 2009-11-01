@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+	<name>Bazooka</name>
+  <groupId>bazooka</groupId>
+  <artifactId>bazooka</artifactId>
+  <version>0.9</version>
+	<packaging>war</packaging>
+
+	<developers>
+		<developer>
+			<id>tfernandez</id>
+			<name>Tiago Fernandez</name>
+			<email>tiago182@gmail.com</email>
+			<url>http://tiagofernandez.blogspot.com</url>
+			<timezone>-3</timezone>
+		</developer>
+	</developers>
+
+	<properties>
+	  <gwtHome>${basedir}/../../Toolbox/gwt-2.0.0-ms2</gwtHome>
+	</properties>
+
+	<dependencies>
+	  <dependency>
+	    <groupId>com.google.gwt</groupId>
+	    <artifactId>gwt-dev</artifactId>
+			<version>2.0.0-ms2</version>
+			<scope>test</scope>
+	  </dependency>
+	  <dependency>
+	    <groupId>com.google.gwt</groupId>
+	    <artifactId>gwt-servlet</artifactId>
+			<version>2.0.0-ms2</version>
+			<scope>runtime</scope>
+	  </dependency>
+	  <dependency>
+	    <groupId>com.google.gwt</groupId>
+	    <artifactId>gwt-user</artifactId>
+			<version>2.0.0-ms2</version>
+	  </dependency>
+	  <dependency>
+	    <groupId>com.gwtext</groupId>
+	    <artifactId>gwtext</artifactId>
+			<version>2.0.5</version>
+	  </dependency>
+	  <dependency>
+	    <groupId>junit</groupId>
+	    <artifactId>junit</artifactId>
+			<version>3.8.2</version>
+			<scope>test</scope>
+	  </dependency>
+	</dependencies>
+
+  <build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-surefire-plugin</artifactId>
+			  <configuration>
+			  	<skipTests>true</skipTests>
+				</configuration>
+      </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>gwt-maven-plugin</artifactId>
+				<configuration>
+					<gwtHome>${gwtHome}</gwtHome>
+					<disableCastChecking>true</disableCastChecking>
+					<disableClassMetadata>true</disableClassMetadata>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generateAsync</goal>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>maven-jetty-plugin</artifactId>
+				<configuration>
+					<contextPath>bazooka</contextPath>
+        	<webApp>${basedir}/target/bazooka-${pom.version}.war</webApp>
+        </configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>gwt</id>
+			<url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo</url>
+		</repository>
+		<repository>
+			<id>gwt-ext</id>
+			<url>http://www.gwt-ext.com/maven2/</url>
+		</repository>
+		<repository>
+			<id>ibiblio</id>
+			<url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
+		</repository>
+	</repositories>
+
+</project>

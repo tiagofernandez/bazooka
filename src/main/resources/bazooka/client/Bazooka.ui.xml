@@ -1,0 +1,28 @@
+<ui:UiBinder
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:g='urn:import:com.google.gwt.user.client.ui'
+  xmlns:bazooka='urn:import:bazooka.client'>
+
+  <g:DockLayoutPanel unit="EM">
+
+    <g:north size="9">
+      <bazooka:TopPanel ui:field="topPanel"/>
+    </g:north>
+
+    <g:center>
+      <g:SplitLayoutPanel>
+
+        <g:west size="300">
+          <bazooka:Shortcuts ui:field="shortcuts"/>
+        </g:west>
+
+        <g:center>
+          <bazooka:Content ui:field="content"/>
+        </g:center>
+
+      </g:SplitLayoutPanel>
+    </g:center>
+
+  </g:DockLayoutPanel>
+
+</ui:UiBinder>

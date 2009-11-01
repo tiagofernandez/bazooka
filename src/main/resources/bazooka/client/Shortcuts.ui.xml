@@ -1,0 +1,26 @@
+<ui:UiBinder
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:g='urn:import:com.google.gwt.user.client.ui'
+  xmlns:bazooka='urn:import:bazooka.client'>
+
+  <ui:style src="Bazooka.css"/>
+
+  <g:StackLayoutPanel styleName="{style.shortcuts}" unit="EM">
+
+    <g:stack>
+      <g:header size="3">
+        <g:Label styleName="{style.stackHeader}">Shooter</g:Label>
+      </g:header>
+      <bazooka:Shooter ui:field="shooter"/>
+    </g:stack>
+
+    <g:stack>
+      <g:header size="3">
+        <g:Label styleName="{style.stackHeader}">Configuration</g:Label>
+      </g:header>
+      <bazooka:Configuration ui:field="configuration"/>
+    </g:stack>
+
+  </g:StackLayoutPanel>
+
+</ui:UiBinder>

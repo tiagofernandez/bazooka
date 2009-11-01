@@ -1,0 +1,56 @@
+.aboutText {
+  width: 200px;
+  padding: 10px;
+  text-align: left;
+}
+
+.banner {
+  margin-left: 10px;
+  margin-top: 22px;
+  text-align: left;
+}
+
+.content {
+  width: 99.5%;
+}
+
+.logo {
+  background: url(images/logo.png);
+  margin-right: 10px;
+  margin-top: -100px;
+  float: right;
+  position: relative;
+  width: 128px;
+  height: 128px;
+}
+
+.section {
+  background: #c1eec8 url(images/gradient.gif) repeat-x 0px -1px;
+  border: 1px solid #666;
+  font-weight: bold;
+  padding-left: 1em;
+  padding-top: 1em;
+  height: 1.89em;
+}
+
+.shortcuts {
+  border-left: 1px solid #666;
+  border-right: 1px solid #666;
+}
+
+.stackHeader {
+  background: #c1eec8 url(images/gradient.gif) repeat-x 0px -1px;
+  padding-top: 1em;
+  font-weight: bold;
+  text-align: center;
+  border-top: 1px solid #666;
+  border-bottom: 1px solid #666;
+}
+
+.textWrapper {
+  padding-top: 0.8em;
+}
+
+.title {
+  font-size: 50px;
+}
