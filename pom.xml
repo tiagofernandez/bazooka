@@ -76,8 +76,6 @@
 				<artifactId>gwt-maven-plugin</artifactId>
 				<configuration>
 					<gwtHome>${gwtHome}</gwtHome>
-					<disableCastChecking>true</disableCastChecking>
-					<disableClassMetadata>true</disableClassMetadata>
 				</configuration>
 				<executions>
 					<execution>
