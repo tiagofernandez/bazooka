@@ -1,13 +1,22 @@
 <html>
 
   <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Bazooka</title>
     <link type="text/css" rel='stylesheet' href='css/default.css'>
     <script type="text/javascript" language='javascript' src='bazooka/bazooka.nocache.js'></script>
   </head>
 
   <body>
+		<script type="text/javascript" 
+		src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"> </script>
+		<div id="placeholder"></div>
+		<script>
+		 CFInstall.check({
+		    node: "placeholder",
+		    destination: "http://www.waikiki.com"
+		  });
+		</script>
     <noscript>
       <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; border: 1px solid red; padding: 4px; font-family: sans-serif">
         Your web browser must have JavaScript enabled
