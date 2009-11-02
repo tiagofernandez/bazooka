@@ -8,7 +8,7 @@
 
     <g:Dock direction="CENTER">
       <g:HTML styleName="{style.aboutText}">
-        Wrote by Tiago Fernandez (2009) http://tiagofernandez.blogspot.com
+        Written by Tiago Fernandez: http://tiagofernandez.blogspot.com
       </g:HTML>
     </g:Dock>
 
