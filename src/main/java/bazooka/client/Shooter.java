@@ -1,5 +1,8 @@
 package bazooka.client;
 
+import bazooka.client.exception.ExistingShooterException;
+import bazooka.client.service.ShooterService;
+import bazooka.client.service.ShooterServiceAsync;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -7,6 +10,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 
 import java.util.HashMap;
@@ -17,6 +21,8 @@ public class Shooter extends Composite {
   interface Binder extends UiBinder<Widget, Shooter> {}
 
   private static final Binder binder = GWT.create(Binder.class);
+
+  private ShooterServiceAsync shooterService = GWT.create(ShooterService.class);
 
   @UiField Button newButton;
   @UiField Button editButton;
@@ -39,14 +45,24 @@ public class Shooter extends Composite {
 
   @UiHandler("newButton")
   void onNewButtonClicked(ClickEvent event) {
-    String newShooterName = askNewShooterName();
-    if (newShooterName != null) {
-      RadioButton newShooter = buildShooterRadioButton(newShooterName);
-      newShooter.setValue(true);
-      addShooter(newShooter);
-      enableDeleteButton();
-      onEditButtonClicked(null);
-    }
+    createShooter(askNewShooterName());
+  }
+
+  private void createShooter(String name) {
+    AsyncCallback<String> callback = new AsyncCallback<String>() {
+      public void onFailure(Throwable caught) {
+        if (caught instanceof ExistingShooterException)
+          Window.alert("This name is already taken.");
+      }
+      public void onSuccess(String name) {
+        RadioButton newShooter = buildShooterRadioButton(name);
+        newShooter.setValue(true);
+        addShooter(newShooter);
+        enableDeleteButton();
+        onEditButtonClicked(null);
+      }
+    };
+    shooterService.createShooter(name, callback);
   }
 
   @UiHandler("editButton")
