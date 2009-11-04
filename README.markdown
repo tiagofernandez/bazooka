@@ -22,8 +22,7 @@ Get the application running
 Author
 ------
 
-Tiago Fernandez
-[Blog][b] | [Twitter][t]
+Tiago Fernandez | [Blog][b] | [Twitter][t]
 
 [b]: http://tiagofernandez.blogspot.com
 [t]: http://twitter.com/tiagofernandez
