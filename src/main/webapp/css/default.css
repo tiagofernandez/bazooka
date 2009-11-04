@@ -49,5 +49,5 @@ a:visited {
 }
 
 .gwt-Button[disabled] {
-  cursor: not-allowed;
+  cursor: auto;
 }
