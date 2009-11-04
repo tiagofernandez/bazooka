@@ -43,3 +43,11 @@ a:visited {
 .gwt-DialogBox .gwt-Button {
   margin: 10px;
 }
+
+.gwt-Button {
+  cursor: pointer;
+}
+
+.gwt-Button[disabled] {
+  cursor: not-allowed;
+}
