@@ -1,16 +1,15 @@
 package bazooka.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Configuration extends Composite {
 
@@ -46,6 +45,16 @@ public class Configuration extends Composite {
       disableDeleteButton();
     else
       enableDeleteButton();
+  }
+
+  @UiHandler("configList")
+  void onConfigListKeyDown(KeyDownEvent event) {
+    onConfigListChanged(null);
+  }
+
+  @UiHandler("configList")
+  void onConfigListKeyUp(KeyUpEvent event) {
+    onConfigListChanged(null);
   }
 
   @UiHandler("saveButton")
