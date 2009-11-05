@@ -3,8 +3,9 @@ package bazooka.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -49,7 +50,6 @@ public class Content extends Composite {
 
   @Override protected void onLoad() {
     loadTextAreas();
-    loadRequestList();
     populateRequestList();
   }
 
@@ -83,6 +83,25 @@ public class Content extends Composite {
   void onShootButtonClicked(ClickEvent event) {
     selectDefaultRequestIfChanged();
     responseTextArea.setValue("BOOM!");
+  }
+
+  @UiHandler("requestList")
+  void onRequestListChanged(ChangeEvent event) {
+    requestTextArea.setValue(requests.get(getSelectedRequestName()));
+    if (getSelectedRequestIndex() == 0)
+      disableDeleteRequestButton();
+    else
+      enableDeleteRequestButton();
+  }
+
+  @UiHandler("requestList")
+  void onRequestListKeyDown(KeyDownEvent event) {
+    onRequestListChanged(null);
+  }
+
+  @UiHandler("requestList")
+  void onRequestListKeyUp(KeyUpEvent event) {
+    onRequestListChanged(null);
   }
 
   void showScriptPanel() {
@@ -140,18 +159,6 @@ public class Content extends Composite {
     responseTextArea.setGrowMax(240);
     responseTextArea.setWidth("100%");
     responseTextAreaDiv.insertFirst(responseTextArea.getElement());
-  }
-
-  private void loadRequestList() {
-    requestList.addChangeHandler(new ChangeHandler() {
-      public void onChange(ChangeEvent event) {
-        requestTextArea.setValue(requests.get(getSelectedRequestName()));
-        if (getSelectedRequestIndex() == 0)
-          disableDeleteRequestButton();
-        else
-          enableDeleteRequestButton();
-      }
-    });
   }
 
   private void populateRequestList() {
