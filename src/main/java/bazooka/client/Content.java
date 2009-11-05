@@ -35,13 +35,13 @@ public class Content extends Composite {
   @UiField DivElement requestTextAreaDiv;
   @UiField DivElement responseTextAreaDiv;
 
-  TextArea scriptTextArea;
-  TextArea requestTextArea;
-  TextArea responseTextArea;
+  private TextArea scriptTextArea;
+  private TextArea requestTextArea;
+  private TextArea responseTextArea;
 
-  Map<String, String> requests = new HashMap<String, String>();
+  private final Map<String, String> requests = new HashMap<String, String>();
 
-  Shooter shooter;
+  private Shooter shooter;
 
   Content() {
     initWidget(binder.createAndBindUi(this));
@@ -85,13 +85,33 @@ public class Content extends Composite {
     responseTextArea.setValue("BOOM!");
   }
 
-  void loadTextAreas() {
+  void showScriptPanel() {
+    scriptPanel.setVisible(true);
+  }
+
+  void showMessagePanel() {
+    messagePanel.setVisible(true);
+  }
+
+  void hideScriptPanel() {
+    scriptPanel.setVisible(false);
+  }
+
+  void hideMessagePanel() {
+    messagePanel.setVisible(false);
+  }
+
+  void setShooter(Shooter shooter) {
+    this.shooter = shooter;
+  }
+
+  private void loadTextAreas() {
     loadScriptTextArea();
     loadRequestTextArea();
     loadResponseTextArea();
   }
 
-  void loadScriptTextArea() {
+  private void loadScriptTextArea() {
     scriptTextArea = new TextArea();
     scriptTextArea.setGrow(true);
     scriptTextArea.setGrowMin(300);
@@ -100,7 +120,7 @@ public class Content extends Composite {
     scriptTextAreaDiv.insertFirst(scriptTextArea.getElement());
   }
 
-  void loadRequestTextArea() {
+  private void loadRequestTextArea() {
     requestTextArea = new TextArea();
     requestTextArea.setGrow(true);
     requestTextArea.setGrowMax(240);
@@ -113,7 +133,7 @@ public class Content extends Composite {
     requestTextAreaDiv.insertFirst(requestTextArea.getElement());
   }
 
-  void loadResponseTextArea() {
+  private void loadResponseTextArea() {
     responseTextArea = new TextArea();
     responseTextArea.setReadOnly(true);
     responseTextArea.setGrow(true);
@@ -134,28 +154,28 @@ public class Content extends Composite {
     });
   }
 
-  void populateRequestList() {
+  private void populateRequestList() {
     addEmptyRequest(""); // default
     addRequest("Sample-1", "foo");
     addRequest("Sample-2", "bar");
     addRequest("Sample-3", "baz");
   }
 
-  void addEmptyRequest(String name) {
+  private void addEmptyRequest(String name) {
     addRequest(name, "");
   }
 
-  void addRequest(String name, String value) {
+  private void addRequest(String name, String value) {
     requestList.addItem(name);
     requests.put(name, value);
   }
 
-  void removeSelectedRequest() {
+  private void removeSelectedRequest() {
     requestList.removeItem(getSelectedRequestIndex());
     requests.remove(getSelectedRequestName());
   }
 
-  boolean containsRequest(String name) {
+  private boolean containsRequest(String name) {
     for (int i = 0; i < requestList.getItemCount(); i++) {
       String item = requestList.getItemText(i);
       if (item.trim().equalsIgnoreCase(name.trim()))
@@ -164,50 +184,47 @@ public class Content extends Composite {
     return false;
   }
 
-  String getRequest() {
+  private String getRequest() {
     return requestTextArea.getText();
   }
 
-  String getSelectedRequestName() {
+  private String getSelectedRequestName() {
     return requestList.getItemText(getSelectedRequestIndex());
   }
 
-  int getSelectedRequestIndex() {
+  private int getSelectedRequestIndex() {
     return requestList.getSelectedIndex();
   }
 
-  void selectDefaultRequestIfChanged() {
+  private void selectDefaultRequestIfChanged() {
     if (hasRequestChanged())
       selectFirstRequest();
   }
 
-  void selectFirstRequest() {
+  private void selectFirstRequest() {
     requestList.setSelectedIndex(0);
     disableDeleteRequestButton();
   }
 
-  void selectLastRequest() {
+  private void selectLastRequest() {
     int lastIndex = requestList.getItemCount() - 1;
     requestList.setSelectedIndex(lastIndex);
   }
 
-  boolean hasRequestChanged() {
+  private boolean hasRequestChanged() {
     String savedRequest = requests.get(getSelectedRequestName());
-    if (!savedRequest.equals(getRequest()))
-      return true;
-    else
-      return false;
+    return !savedRequest.equals(getRequest());
   }
 
-  void enableDeleteRequestButton() {
+  private void enableDeleteRequestButton() {
     deleteRequestButton.setEnabled(true);
   }
 
-  void disableDeleteRequestButton() {
+  private void disableDeleteRequestButton() {
     deleteRequestButton.setEnabled(false);
   }
 
-  String askNewRequestName() {
+  private String askNewRequestName() {
     String newName = Window.prompt("Please specify the request name.", "My Request");
     while (containsRequest(newName)) {
       Window.alert("'" + newName + "' already exists, please choose a different name.");

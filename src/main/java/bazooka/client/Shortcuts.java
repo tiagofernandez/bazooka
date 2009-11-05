@@ -20,6 +20,14 @@ public class Shortcuts extends LayoutComposite {
   }
 
   @Override protected void onLoad() {
-    shooter.configuration = configuration;
+    shooter.setConfiguration(configuration);
+  }
+
+  void setContent(Content content) {
+    shooter.setContent(content);
+  }
+
+  Shooter getShooter() {
+    return shooter;
   }
 }

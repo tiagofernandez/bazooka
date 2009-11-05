@@ -22,14 +22,14 @@ public class Bazooka implements EntryPoint {
     injectDependencies();
   }
 
-  void loadRootPanel() {
+  private void loadRootPanel() {
     RootLayoutPanel root = RootLayoutPanel.get();
     root.add(binder.createAndBindUi(this));
     root.layout();
   }
 
-  void injectDependencies() {
-    shortcuts.shooter.content = content;
-    content.shooter = shortcuts.shooter;
+  private void injectDependencies() {
+    shortcuts.setContent(content);
+    content.setShooter(shortcuts.getShooter());
   }
 }

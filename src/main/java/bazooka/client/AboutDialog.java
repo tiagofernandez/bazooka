@@ -28,7 +28,7 @@ public class AboutDialog extends DialogBox {
   @Override protected void onPreviewNativeEvent(NativePreviewEvent preview) {
     super.onPreviewNativeEvent(preview);
     NativeEvent evt = preview.getNativeEvent();
-    if (isEventTypeKeydown(evt))
+    if (isEventTypeKeydown(evt.getType()))
       switch (evt.getKeyCode()) {
         case KeyCodes.KEY_ENTER:
         case KeyCodes.KEY_ESCAPE:
@@ -42,7 +42,7 @@ public class AboutDialog extends DialogBox {
     hide();
   }
 
-  boolean isEventTypeKeydown(NativeEvent evt) {
-    return "keydown".equals(evt.getType());
+  private boolean isEventTypeKeydown(String type) {
+    return "keydown".equals(type);
   }
 }

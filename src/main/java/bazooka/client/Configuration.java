@@ -25,7 +25,7 @@ public class Configuration extends Composite {
   @UiField Button removeParamButton;
   @UiField VerticalPanel parametersPanel;
 
-  Map<String, Map<String, String>> configurations = new HashMap<String, Map<String, String>>();
+  private final Map<String, Map<String, String>> configurations = new HashMap<String, Map<String, String>>();
 
   Configuration() {
     initWidget(binder.createAndBindUi(this));
@@ -101,14 +101,14 @@ public class Configuration extends Composite {
     enableSaveButton();
   }
 
-  void populateConfigList() {
+  private void populateConfigList() {
     addConfig("Default");
     addConfig("Foo");
     addConfig("Bar");
     addConfig("Baz");
   }
 
-  void populateDefaultParameters() {
+  private void populateDefaultParameters() {
     for (int i = 1; i <= 10; i++) {
       String key = "FOO" + i, value = "BAR" + i;
       getSelectedParameters().put(key, value);
@@ -116,13 +116,13 @@ public class Configuration extends Composite {
     }
   }
 
-  void reloadParameters() {
+  private void reloadParameters() {
     clearParameters();
     for (Map.Entry<String, String> param : getSelectedParameters().entrySet())
       addParameter(param.getKey(), param.getValue());
   }
 
-  void cloneParameters() {
+  private void cloneParameters() {
     for (int i = 0; i < parametersPanel.getWidgetCount(); i++) {
       HorizontalPanel entry = (HorizontalPanel) parametersPanel.getWidget(i);
       String key = getParameterKey(entry);
@@ -131,7 +131,7 @@ public class Configuration extends Composite {
     }
   }
 
-  void refreshParameters() {
+  private void refreshParameters() {
     getSelectedParameters().clear();
 
     for (int i = parametersPanel.getWidgetCount() - 1; i >= 0 ; i--) {
@@ -145,97 +145,97 @@ public class Configuration extends Composite {
     }
   }
 
-  void clearParameters() {
+  private void clearParameters() {
     parametersPanel.clear();
   }
 
-  void addParameter(String key, String value) {
+  private void addParameter(String key, String value) {
     parametersPanel.add(buildParameterEntry(key, value));
   }
 
-  void removeParameter(HorizontalPanel entry) {
+  private void removeParameter(HorizontalPanel entry) {
     parametersPanel.remove(entry);
   }
 
-  Map<String, String> getSelectedParameters() {
+  private Map<String, String> getSelectedParameters() {
     return configurations.get(getSelectedConfig());
   }
 
-  String getParameterKey(HorizontalPanel entry) {
+  private String getParameterKey(HorizontalPanel entry) {
     TextBox key = (TextBox) entry.getWidget(0);
     return key.getText();
   }
 
-  String getParameterValue(HorizontalPanel entry) {
+  private String getParameterValue(HorizontalPanel entry) {
     TextBox key = (TextBox) entry.getWidget(2);
     return key.getText();
   }
 
-  void removeLastParameter() {
+  private void removeLastParameter() {
     removeParameter(getLastParameterEntry());
   }
 
-  HorizontalPanel getLastParameterEntry() {
+  private HorizontalPanel getLastParameterEntry() {
     int lastIndex = parametersPanel.getWidgetCount() - 1;
     return (HorizontalPanel) parametersPanel.getWidget(lastIndex);
   }
 
-  boolean mustDiscardParameter(String key) {
+  private boolean mustDiscardParameter(String key) {
     return "".equals(key.trim());
   }
 
-  void enableSaveButton() {
+  private void enableSaveButton() {
     saveButton.setEnabled(true);
   }
 
-  void disableSaveButton() {
+  private void disableSaveButton() {
     saveButton.setEnabled(false);
   }
 
-  void enableDeleteButton() {
+  private void enableDeleteButton() {
     deleteButton.setEnabled(true);
   }
 
-  void disableDeleteButton() {
+  private void disableDeleteButton() {
     deleteButton.setEnabled(false);
   }
 
-  void addConfig(String name) {
+  private void addConfig(String name) {
     configList.addItem(name);
     configurations.put(name, new HashMap<String, String>());
   }
 
-  void removeSelectedConfig() {
+  private void removeSelectedConfig() {
     configurations.remove(getSelectedConfig());
     configList.removeItem(getSelectedConfigIndex());
   }
 
-  boolean containsConfig(String name) {
+  private boolean containsConfig(String name) {
     return configurations.containsKey(name);
   }
 
-  String getSelectedConfig() {
+  private String getSelectedConfig() {
     return configList.getItemText(getSelectedConfigIndex());
   }
 
-  int getSelectedConfigIndex() {
+  private int getSelectedConfigIndex() {
     return configList.getSelectedIndex();
   }
 
-  void selectFirstConfig() {
+  private void selectFirstConfig() {
     configList.setSelectedIndex(0);
   }
 
-  boolean isFirstConfigSelected() {
+  private boolean isFirstConfigSelected() {
     return configList.getSelectedIndex() == 0;
   }
 
-  void selectLastConfig() {
+  private void selectLastConfig() {
     int lastIndex = configList.getItemCount() - 1;
     configList.setSelectedIndex(lastIndex);
   }
 
-  HorizontalPanel buildParameterEntry(String key, String value) {
+  private HorizontalPanel buildParameterEntry(String key, String value) {
     HorizontalPanel entry = new HorizontalPanel();
     entry.setSpacing(5);
     entry.add(buildParameterTextBox(key));
@@ -244,7 +244,7 @@ public class Configuration extends Composite {
     return entry;
   }
 
-  TextBox buildParameterTextBox(String text) {
+  private TextBox buildParameterTextBox(String text) {
     TextBox paramBox = new TextBox();
     paramBox.setText(text);
     paramBox.setWidth("125");
@@ -256,14 +256,14 @@ public class Configuration extends Composite {
     return paramBox;
   }
 
-  Label buildEqualsLabel() {
+  private Label buildEqualsLabel() {
     Label label = new Label("=");
     label.setWidth("10");
     label.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
     return label;
   }
 
-  String askNewConfigName() {
+  private String askNewConfigName() {
     String newName = Window.prompt("Please specify the configuration name.", "My Config");
     while (containsConfig(newName)) {
       Window.alert("'" + newName + "' already exists, please choose a different name.");
