@@ -6,8 +6,7 @@ body {
   background: #fff;
   color: black;
   font-family: Helvetica, Arial, sans-serif;
-  margin: 8px;
-  margin-top: 3px;
+  margin: 3px 8px 8px;
   overflow: hidden;
 }
 
