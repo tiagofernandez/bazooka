@@ -1,5 +1,6 @@
 package bazooka.client;
 
+import bazooka.client.data.ShooterData;
 import bazooka.client.exception.ExistingShooterException;
 import bazooka.client.service.ShooterService;
 import bazooka.client.service.ShooterServiceAsync;
@@ -93,13 +94,13 @@ public class Shooter extends Composite {
   }
 
   private void createShooter(String name) {
-    AsyncCallback<String> callback = new AsyncCallback<String>() {
+    AsyncCallback<ShooterData> callback = new AsyncCallback<ShooterData>() {
       public void onFailure(Throwable caught) {
         if (caught instanceof ExistingShooterException)
           Window.alert("This name is already taken.");
       }
-      public void onSuccess(String name) {
-        RadioButton newShooter = buildShooterRadioButton(name);
+      public void onSuccess(ShooterData info) {
+        RadioButton newShooter = buildShooterRadioButton(info.getName());
         newShooter.setValue(true);
         addShooter(newShooter);
         onEditButtonClicked(null);
