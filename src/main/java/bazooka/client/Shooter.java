@@ -45,7 +45,10 @@ public class Shooter extends Composite {
 
   @UiHandler("newButton")
   void onNewButtonClicked(ClickEvent event) {
-    createShooter(askNewShooterName());
+    String newShooterName = askNewShooterName();
+    if (newShooterName != null) {
+      createShooter(newShooterName);
+    }
   }
 
   @UiHandler("editButton")
