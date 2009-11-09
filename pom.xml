@@ -195,7 +195,7 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate</artifactId>
       <version>3.3.2.GA</version>
-      <scope>runtime</scope>
+      <type>pom</type>
       <exclusions>
         <exclusion>
           <groupId>javax.transaction</groupId>
