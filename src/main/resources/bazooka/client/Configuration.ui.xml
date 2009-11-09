@@ -3,6 +3,8 @@
   xmlns:g='urn:import:com.google.gwt.user.client.ui'
   xmlns:bazooka='urn:import:bazooka.client'>
 
+  <ui:style src="Bazooka.css"/>
+  
   <g:ScrollPanel>
     <g:VerticalPanel>
 
@@ -16,8 +18,12 @@
       <g:VerticalPanel spacing="5" ui:field="parametersPanel"/>
 
       <g:HorizontalPanel spacing="5">
-        <g:Button ui:field="addParamButton">Add</g:Button>
-        <g:Button ui:field="removeParamButton">Remove last</g:Button>
+        <g:Button ui:field="addParamButton" styleName="{style.addRemoveButton}">
+          <img src="/images/add.png" width="16" height="16"/>
+        </g:Button>
+        <g:Button ui:field="removeParamButton" styleName="{style.addRemoveButton}" visible="false">
+          <img src="/images/remove.gif" width="16" height="16"/>
+        </g:Button>
       </g:HorizontalPanel>
 
     </g:VerticalPanel>

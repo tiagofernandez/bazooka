@@ -12,7 +12,7 @@
     <g:center>
       <g:SplitLayoutPanel>
 
-        <g:west size="300">
+        <g:west size="350">
           <bazooka:Shortcuts ui:field="shortcuts"/>
         </g:west>
 

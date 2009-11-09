@@ -90,14 +90,7 @@ public class Configuration extends Composite {
   @UiHandler("addParamButton")
   void onAddParamClicked(ClickEvent event) {
     addParameter("", "");
-    addParamButton.setFocus(true);
-    enableSaveButton();
-  }
-
-  @UiHandler("removeParamButton")
-  void onRemoveParamClicked(ClickEvent event) {
-    removeLastParameter();
-    removeParamButton.setFocus(true);
+    addParamButton.setFocus(false);
     enableSaveButton();
   }
 
@@ -171,15 +164,6 @@ public class Configuration extends Composite {
     return key.getText();
   }
 
-  private void removeLastParameter() {
-    removeParameter(getLastParameterEntry());
-  }
-
-  private HorizontalPanel getLastParameterEntry() {
-    int lastIndex = parametersPanel.getWidgetCount() - 1;
-    return (HorizontalPanel) parametersPanel.getWidget(lastIndex);
-  }
-
   private boolean mustDiscardParameter(String key) {
     return "".equals(key.trim());
   }
@@ -241,13 +225,14 @@ public class Configuration extends Composite {
     entry.add(buildParameterTextBox(key));
     entry.add(buildEqualsLabel());
     entry.add(buildParameterTextBox(value));
+    entry.add(buildRemoveParameterButton(entry));
     return entry;
   }
 
   private TextBox buildParameterTextBox(String text) {
     TextBox paramBox = new TextBox();
     paramBox.setText(text);
-    paramBox.setWidth("125");
+    paramBox.setWidth("140");
     paramBox.addChangeHandler(new ChangeHandler() {
       public void onChange(ChangeEvent event) {
         enableSaveButton();
@@ -261,6 +246,19 @@ public class Configuration extends Composite {
     label.setWidth("10");
     label.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
     return label;
+  }
+
+  private Widget buildRemoveParameterButton(final HorizontalPanel entry) {
+    Button remButton = new Button();
+    remButton.setStyleName(removeParamButton.getStyleName());
+    remButton.setHTML(removeParamButton.getHTML());
+    remButton.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        removeParameter(entry);
+        enableSaveButton();
+      }
+    });
+    return remButton;
   }
 
   private String askNewConfigName() {

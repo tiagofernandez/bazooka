@@ -1,3 +1,29 @@
+body, table {
+  font-size: small;
+}
+
+body {
+  background: #fff;
+  color: black;
+  font-family: Helvetica, Arial, sans-serif;
+  margin: 3px 8px 8px;
+  overflow: hidden;
+}
+
+a {
+  color: #000;
+}
+
+a:visited {
+  color: #000;
+}
+
+.addRemoveButton {
+  border: 0;
+  background: transparent;
+  width: 18px;
+}
+
 .aboutText {
   width: 200px;
   padding: 10px;
