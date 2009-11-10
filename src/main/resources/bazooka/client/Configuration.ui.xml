@@ -19,10 +19,10 @@
 
       <g:HorizontalPanel spacing="5">
         <g:Button ui:field="addParamButton" styleName="{style.addRemoveButton}">
-          <img src="/images/add.png" width="16" height="16"/>
+          <img src="images/add.png" width="16" height="16"/>
         </g:Button>
         <g:Button ui:field="removeParamButton" styleName="{style.addRemoveButton}" visible="false">
-          <img src="/images/remove.gif" width="16" height="16"/>
+          <img src="images/remove.gif" width="16" height="16"/>
         </g:Button>
       </g:HorizontalPanel>
 
