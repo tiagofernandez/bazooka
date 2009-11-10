@@ -9,7 +9,7 @@
     <g:VerticalPanel styleName="{style.content}">
 
       <g:HTMLPanel ui:field="scriptPanel" visible="false">
-        <div class="{style.section}">Script</div>
+        <div class="{style.section}">Groovy Script</div>
         <div style="padding-top: 1em;">
           <g:Button ui:field="saveScriptButton">Save</g:Button>
         </div>

@@ -232,7 +232,7 @@ public class Configuration extends Composite {
   private TextBox buildParameterTextBox(String text) {
     TextBox paramBox = new TextBox();
     paramBox.setText(text);
-    paramBox.setWidth("140");
+    paramBox.setWidth("135");
     paramBox.addChangeHandler(new ChangeHandler() {
       public void onChange(ChangeEvent event) {
         enableSaveButton();
@@ -243,7 +243,7 @@ public class Configuration extends Composite {
 
   private Label buildEqualsLabel() {
     Label label = new Label("=");
-    label.setWidth("10");
+    label.setWidth("5");
     label.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
     return label;
   }

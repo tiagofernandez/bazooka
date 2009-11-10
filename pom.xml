@@ -7,7 +7,7 @@
   <name>Bazooka</name>
   <groupId>bazooka</groupId>
   <artifactId>bazooka</artifactId>
-  <version>0.9</version>
+  <version>1.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
   <developers>
