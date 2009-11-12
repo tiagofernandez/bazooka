@@ -23,4 +23,8 @@
     <url-pattern>/bazooka/junithost</url-pattern>
   </servlet-mapping>
 
+  <listener>
+    <listener-class>bazooka.server.context.BazookaContextListener</listener-class>
+  </listener>
+
 </web-app>

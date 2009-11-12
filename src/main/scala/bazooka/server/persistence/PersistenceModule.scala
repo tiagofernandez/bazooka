@@ -6,8 +6,8 @@ import com.wideplay.warp.persist.jpa._
 class PersistenceModule extends AbstractModule {
 
   @Override def configure() = {
-    bindConstant().annotatedWith(classOf[JpaUnit]).to(getPersistenceUnitName())
-    bind(classOf[PersistenceInitializer]).asEagerSingleton()
+    bindConstant.annotatedWith(classOf[JpaUnit]).to(getPersistenceUnitName)
+    bind(classOf[PersistenceInitializer]).asEagerSingleton
   }
 
   protected def getPersistenceUnitName(): String = {

@@ -1,10 +1,10 @@
-package bazooka.server
+package bazooka.server.context
 
-import persistence._
+import bazooka.server.persistence._
 
 class BazookaContext4Test extends BazookaContext {
 
   override protected def getPersistenceModule(): PersistenceModule = {
-    new PersistenceModule4Test()
+    new PersistenceModule4Test
   }
 }

@@ -16,11 +16,45 @@ class ShooterServiceImpl extends RemoteServiceServlet with ShooterService {
 
   @Transactional
   def createShooter(name: String): ShooterData = {
-    if ("oops".equalsIgnoreCase(name))
-      throw new ExistingShooterException()
+    if (shooterExists(name))
+      throw new ExistingShooterException
 
-    //em.get().persist...
+    val shooter = new ShooterData(name)
+    em.get.persist(shooter)
+    shooter
+  }
 
-    new ShooterData(name)
+  @Transactional
+  def deleteShooter(shooter: ShooterData): java.lang.Boolean = {
+    val shooterToDelete = getShooterById(shooter.getId)
+
+    if (shooterToDelete == None)
+      throw new NonExistingShooterException
+
+    em.get.remove(shooterToDelete)
+    !shooterExists(shooter.getName)
+  }
+
+  private def shooterExists(name: String): Boolean = {
+    getShooter(name) != None
+  }
+
+  private def getShooter(name: String): Any = {
+    try {
+      em.get
+        .createQuery("from Shooter s where s.name=:name")
+        .setParameter("name", name)
+        .getSingleResult
+    }
+    catch {
+      case ex => None
+    }
+  }
+
+  private def getShooterById(id: java.lang.Integer): Any = {
+    if (id != null)
+      em.get.find(classOf[ShooterData], id)
+    else
+      None
   }
 }

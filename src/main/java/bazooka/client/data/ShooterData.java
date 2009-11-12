@@ -1,14 +1,16 @@
 package bazooka.client.data;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
+@Entity(name = "Shooter")
 public class ShooterData implements Serializable {
 
-  @Id @GeneratedValue Integer id;
-  @Column String name;
+  @Id @GeneratedValue
+  Integer id;
+
+  @Column(unique = true)
+  String name;
 
   public ShooterData() {}
 

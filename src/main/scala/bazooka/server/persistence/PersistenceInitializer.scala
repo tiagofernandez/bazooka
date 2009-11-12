@@ -6,6 +6,6 @@ import com.wideplay.warp.persist._
 @Singleton
 class PersistenceInitializer @Inject() (service: PersistenceService) {
 
-  service.start()
+  service.start
 
 }
