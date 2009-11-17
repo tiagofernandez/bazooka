@@ -3,14 +3,12 @@ package bazooka.server.persistence
 import com.google.inject._
 import com.wideplay.warp.persist.jpa._
 
-class PersistenceModule extends AbstractModule {
+class PersistenceModule(persistenceUnitName: String) extends AbstractModule {
 
-  @Override def configure() = {
-    bindConstant.annotatedWith(classOf[JpaUnit]).to(getPersistenceUnitName)
+  val unitName = persistenceUnitName
+
+  override def configure() {
+    bindConstant.annotatedWith(classOf[JpaUnit]).to(unitName)
     bind(classOf[PersistenceInitializer]).asEagerSingleton
-  }
-
-  protected def getPersistenceUnitName(): String = {
-    "bazooka"
   }
 }

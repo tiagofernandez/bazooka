@@ -15,7 +15,7 @@ class ShooterServiceImpl extends RemoteServiceServlet with ShooterService {
   @Inject var em: Provider[EntityManager] = _
 
   @Transactional
-  def createShooter(name: String): ShooterData = {
+  def createShooter(name: String) = {
     if (shooterExists(name))
       throw new ExistingShooterException
 
@@ -25,7 +25,7 @@ class ShooterServiceImpl extends RemoteServiceServlet with ShooterService {
   }
 
   @Transactional
-  def deleteShooter(shooter: ShooterData): java.lang.Boolean = {
+  def deleteShooter(shooter: ShooterData) = {
     val shooterToDelete = getShooterById(shooter.getId)
 
     if (shooterToDelete == None)
@@ -35,11 +35,11 @@ class ShooterServiceImpl extends RemoteServiceServlet with ShooterService {
     !shooterExists(shooter.getName)
   }
 
-  private def shooterExists(name: String): Boolean = {
+  private def shooterExists(name: String) = {
     getShooter(name) != None
   }
 
-  private def getShooter(name: String): Any = {
+  private def getShooter(name: String) = {
     try {
       em.get
         .createQuery("from Shooter s where s.name=:name")
@@ -51,7 +51,7 @@ class ShooterServiceImpl extends RemoteServiceServlet with ShooterService {
     }
   }
 
-  private def getShooterById(id: java.lang.Integer): Any = {
+  private def getShooterById(id: java.lang.Integer) = {
     if (id != null)
       em.get.find(classOf[ShooterData], id)
     else

@@ -1,14 +1,16 @@
 package bazooka.server.service
 
-import bazooka.server.context.*
-import bazooka.client.data.*
-import bazooka.client.exception.*
+import bazooka.client.data.ShooterData
+import bazooka.client.exception.ExistingShooterException
+import bazooka.client.exception.NonExistingShooterException
+import bazooka.server.context.BazookaContext
+import bazooka.server.persistence.PersistenceModule
 
-final ShooterServiceImpl svc = new BazookaContext4Test().injector.getInstance(ShooterServiceImpl.class)
+service = new BazookaContext(new PersistenceModule("bazooka-test")).injector.getInstance(ShooterServiceImpl.class)
 
 it "should create a new shooter", {
   def final name = "Hurl"
-  def shooter = svc.createShooter(name)
+  def shooter = service.createShooter(name)
 
   shooter.name.shouldBe name
   shooter.id.shouldNotBe null
@@ -16,21 +18,21 @@ it "should create a new shooter", {
 
 it "should not create shooters with the same name", {
   def final name = "Curl"
-  svc.createShooter(name)
+  service.createShooter(name)
 
   ensureThrows(ExistingShooterException) {
-    svc.createShooter(name)
+    service.createShooter(name)
 	}
 }
 
 it "should delete an existing shooter", {
   def final name = "ToDelete"
-  def final shooter = svc.createShooter(name)
-  svc.deleteShooter(shooter).shouldBe true
+  def final shooter = service.createShooter(name)
+  service.deleteShooter(shooter).shouldBe true
 }
 
 it "should not delete non-existing shooter", {
   ensureThrows(NonExistingShooterException) {
-    svc.deleteShooter(new ShooterData("NonExisting"))
+    service.deleteShooter(new ShooterData("NonExisting"))
 	}
 }

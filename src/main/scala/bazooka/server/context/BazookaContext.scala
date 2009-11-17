@@ -4,22 +4,14 @@ import bazooka.server.persistence._
 import com.google.inject._
 import com.wideplay.warp.persist._
 
-class BazookaContext {
+class BazookaContext(persistenceModule: PersistenceModule) {
 
-  val injector: Injector = initInjector
+  val injector = Guice.createInjector(persistenceModule, PersistenceService
+    .usingJpa
+    .across(UnitOfWork.TRANSACTION)
+    .buildModule)
 
-  private def initInjector(): Injector = {
-    Guice.createInjector(getPersistenceModule, PersistenceService
-      .usingJpa
-      .across(UnitOfWork.TRANSACTION)
-      .buildModule)
-  }
+  def this() = this(new PersistenceModule("bazooka"))
 
-  protected def getPersistenceModule(): PersistenceModule = {
-    new PersistenceModule
-  }
-
-  def getInjector(): Injector = {
-    injector
-  }
+  def getInjector() = injector
 }

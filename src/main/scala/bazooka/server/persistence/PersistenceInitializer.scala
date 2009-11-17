@@ -4,8 +4,8 @@ import com.google.inject._
 import com.wideplay.warp.persist._
 
 @Singleton
-class PersistenceInitializer @Inject() (service: PersistenceService) {
+class PersistenceInitializer @Inject() (persistenceService: PersistenceService) {
 
-  service.start
-
+  persistenceService.start
+  
 }

@@ -6,11 +6,7 @@ class BazookaContextListener extends ServletContextListener {
 
   var context: BazookaContext = _
 
-	def contextInitialized(event: ServletContextEvent): Unit = {
-    context = new BazookaContext
-	}
+	def contextInitialized(event: ServletContextEvent) { context = new BazookaContext }
 
-	def contextDestroyed(event: ServletContextEvent): Unit = {
-    context = null
-  }
+	def contextDestroyed(event: ServletContextEvent) { context = null }
 }
