@@ -3,7 +3,6 @@
 	<inherits name="com.google.gwt.user.User"/>
   <inherits name="com.gwtext.GwtExt"/>
   <inherits name="com.google.gwt.uibinder.UiBinder"/>
-  <inherits name="com.google.gwt.junit.JUnit"/>
 
   <entry-point class="bazooka.client.Bazooka"/>
 

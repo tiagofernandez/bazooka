@@ -6,7 +6,7 @@ import bazooka.client.exception.NonExistingShooterException;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-@RemoteServiceRelativePath("shooter")
+@RemoteServiceRelativePath("GWT.rpc")
 public interface ShooterService extends RemoteService {
 
   ShooterData createShooter(String name) throws ExistingShooterException;

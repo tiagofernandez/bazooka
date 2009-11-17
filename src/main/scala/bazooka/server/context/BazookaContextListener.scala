@@ -1,12 +1,11 @@
 package bazooka.server.context
 
-import javax.servlet._
+import com.google.inject._
+import servlet.GuiceServletContextListener
 
-class BazookaContextListener extends ServletContextListener {
+class BazookaContextListener extends GuiceServletContextListener {
 
-  var context: BazookaContext = _
-
-	def contextInitialized(event: ServletContextEvent) { context = new BazookaContext }
-
-	def contextDestroyed(event: ServletContextEvent) { context = null }
+  override def getInjector(): Injector = {
+    new BazookaContext().getInjector
+  }
 }

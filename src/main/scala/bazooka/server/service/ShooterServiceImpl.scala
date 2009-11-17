@@ -4,13 +4,12 @@ import bazooka.client.exception._
 import bazooka.client.data._
 import bazooka.client.service._
 
-import com.google.gwt.user.server.rpc._
 import com.google.inject._
 import com.wideplay.warp.persist._
 
 import javax.persistence._
 
-class ShooterServiceImpl extends RemoteServiceServlet with ShooterService {
+class ShooterServiceImpl extends ShooterService {
 
   @Inject var em: Provider[EntityManager] = _
 
