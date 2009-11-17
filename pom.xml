@@ -84,6 +84,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
+        <version>1.1</version>
         <configuration>
           <gwtHome>${gwtHome}</gwtHome>
         </configuration>
@@ -147,23 +148,27 @@
   <dependencies>
 
     <!-- Web -->
+
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-dev</artifactId>
       <version>2.0.0-ms2</version>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-servlet</artifactId>
       <version>2.0.0-ms2</version>
       <scope>runtime</scope>
     </dependency>
+
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
       <version>2.0.0-ms2</version>
     </dependency>
+
     <dependency>
       <groupId>com.gwtext</groupId>
       <artifactId>gwtext</artifactId>
@@ -171,26 +176,31 @@
     </dependency>
 
     <!-- Persistence -->
+
     <dependency>
       <groupId>aopalliance</groupId>
       <artifactId>aopalliance</artifactId>
       <version>1.0</version>
     </dependency>
+
     <dependency>
       <groupId>com.wideplay.warp</groupId>
       <artifactId>persist</artifactId>
       <version>2.0</version>
     </dependency>
+
     <dependency>
       <groupId>com.google.code.guice</groupId>
       <artifactId>guice</artifactId>
       <version>2.0</version>
     </dependency>
+
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <version>1.2.122</version>
     </dependency>
+
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate</artifactId>
@@ -203,22 +213,26 @@
         </exclusion>
       </exclusions>
     </dependency>
+
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-entitymanager</artifactId>
       <version>3.4.0.GA</version>
       <scope>runtime</scope>
     </dependency>
+
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-annotations</artifactId>
       <version>3.4.0.GA</version>
     </dependency>
+
     <dependency>
       <groupId>org.jboss.javaee</groupId>
       <artifactId>jboss-javaee</artifactId>
       <version>5.0.1.GA</version>
     </dependency>
+
     <dependency>
       <groupId>javax.persistence</groupId>
       <artifactId>persistence-api</artifactId>
@@ -226,11 +240,13 @@
     </dependency>
 
     <!-- Languages -->
+
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-all</artifactId>
       <version>1.6.5</version>
     </dependency>
+
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
@@ -238,11 +254,13 @@
     </dependency>
 
     <!-- Logging -->
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.4.2</version>
     </dependency>
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
@@ -250,6 +268,7 @@
     </dependency>
 
     <!-- Testing -->
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
