@@ -3,7 +3,7 @@
 
 	<persistence-unit name="bazooka" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-    <class>bazooka.client.data.ShooterData</class>
+    <class>bazooka.server.data.ShooterData</class>
     <properties>
       <property name="hibernate.hbm2ddl.auto" value="update"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
@@ -16,7 +16,7 @@
 
   <persistence-unit name="bazooka-test" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
-    <class>bazooka.client.data.ShooterData</class>
+    <class>bazooka.server.data.ShooterData</class>
     <properties>
       <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>

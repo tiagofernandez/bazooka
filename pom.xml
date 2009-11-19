@@ -190,6 +190,12 @@
     </dependency>
 
     <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.4</version>
+    </dependency>
+
+    <dependency>
       <groupId>com.wideplay.warp</groupId>
       <artifactId>persist</artifactId>
       <version>2.0</version>

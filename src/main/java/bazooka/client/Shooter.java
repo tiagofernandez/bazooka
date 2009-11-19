@@ -1,6 +1,5 @@
 package bazooka.client;
 
-import bazooka.client.data.ShooterData;
 import bazooka.client.exception.ExistingShooterException;
 import bazooka.client.service.ShooterService;
 import bazooka.client.service.ShooterServiceAsync;
@@ -15,6 +14,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Shooter extends Composite {
@@ -48,7 +48,7 @@ public class Shooter extends Composite {
   void onNewButtonClicked(ClickEvent event) {
     String newShooterName = askNewShooterName();
     if (newShooterName != null) {
-      createShooter(newShooterName);
+      saveShooter(newShooterName);
     }
   }
 
@@ -60,10 +60,9 @@ public class Shooter extends Composite {
 
   @UiHandler("deleteButton")
   void onDeleteButtonClicked(ClickEvent event) {
-    RadioButton selectedShooter = getSelectedShooter();
-    if (Window.confirm("Are you sure you want to delete '" + selectedShooter.getText()  + "'?")) {
-      removeShooter(selectedShooter);
-      selectFirstShooter();
+    String shooterName = getSelectedShooter().getText();
+    if (Window.confirm("Are you sure you want to delete '" + shooterName + "'?")) {
+      deleteShooter(shooterName);
     }
   }
 
@@ -93,26 +92,48 @@ public class Shooter extends Composite {
     this.content = content;
   }
 
-  private void createShooter(String name) {
-    AsyncCallback<ShooterData> callback = new AsyncCallback<ShooterData>() {
+  private void saveShooter(final String shooterName) {
+    AsyncCallback<Void> callback = new AsyncCallback<Void>() {
       public void onFailure(Throwable caught) {
         if (caught instanceof ExistingShooterException)
-          Window.alert("This name is already taken.");
+          Window.alert("This shooterName is already taken.");
+        else
+          Window.alert("Error while creating shooter: " + caught.getMessage());
       }
-      public void onSuccess(ShooterData info) {
-        RadioButton newShooter = buildShooterRadioButton(info.getName());
+      public void onSuccess(Void success) {
+        RadioButton newShooter = buildShooterRadioButton(shooterName);
         newShooter.setValue(true);
         addShooter(newShooter);
         onEditButtonClicked(null);
       }
     };
-    shooterService.createShooter(name, callback);
+    shooterService.saveShooter(shooterName, callback);
   }
 
+  private void deleteShooter(final String shooterName) {
+    AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+      public void onFailure(Throwable caught) {
+        Window.alert("Error while deleting shooter: " + caught.getMessage());
+      }
+      public void onSuccess(Void success) {
+        removeShooter(getSelectedShooter());
+        selectFirstShooter();
+      }
+    };
+    shooterService.deleteShooter(shooterName, callback);
+  }
 
   private void populateShooters() {
-    addShooter(buildShooterRadioButton("Hurl"));
-    addShooter(buildShooterRadioButton("AK-47"));
+    AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
+      public void onFailure(Throwable caught) {
+        Window.alert("Error while retrieving shooters: " + caught.getMessage());
+      }
+      public void onSuccess(List<String> shooters) {
+        for (String shooter : shooters)
+          addShooter(buildShooterRadioButton(shooter));
+      }
+    };
+    shooterService.listShooters(callback);
   }
 
   private void selectFirstShooter() {
