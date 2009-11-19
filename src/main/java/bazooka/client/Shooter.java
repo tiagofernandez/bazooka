@@ -23,16 +23,16 @@ public class Shooter extends Composite {
 
   private static final Binder binder = GWT.create(Binder.class);
 
-  private final ShooterServiceAsync shooterService = GWT.create(ShooterService.class);
-
   @UiField Button newButton;
   @UiField Button editButton;
   @UiField Button deleteButton;
   @UiField VerticalPanel shooterPanel;
 
   private final Map<String, RadioButton> shooters = new HashMap<String, RadioButton>();
+  private final ShooterServiceAsync shooterService = GWT.create(ShooterService.class);
 
   private Configuration configuration;
+
   private Content content;
 
   Shooter() {
@@ -54,16 +54,63 @@ public class Shooter extends Composite {
 
   @UiHandler("editButton")
   void onEditButtonClicked(ClickEvent event) {
+    content.getShooterScript(getSelectedShooter());
     disableEditButton();
+    enableDeleteButton();
     showScriptPanel();
   }
 
   @UiHandler("deleteButton")
   void onDeleteButtonClicked(ClickEvent event) {
-    String shooterName = getSelectedShooter().getText();
+    String shooterName = getSelectedShooter();
     if (Window.confirm("Are you sure you want to delete '" + shooterName + "'?")) {
       deleteShooter(shooterName);
     }
+  }
+
+  void saveShooter(final String shooterName) {
+    AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+      public void onFailure(Throwable caught) {
+        if (caught instanceof ExistingShooterException)
+          Window.alert("This name is already taken.");
+        else
+          Window.alert("Error while creating shooter: " + caught.getMessage());
+      }
+      public void onSuccess(Void success) {
+        RadioButton newShooter = buildShooterRadioButton(shooterName);
+        newShooter.setValue(true);
+        addShooter(newShooter);
+        onEditButtonClicked(null);
+      }
+    };
+    shooterService.saveShooter(shooterName, callback);
+  }
+
+  void deleteShooter(final String shooterName) {
+    AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+      public void onFailure(Throwable caught) {
+        Window.alert("Error while deleting shooter: " + caught.getMessage());
+      }
+      public void onSuccess(Void success) {
+        removeShooter(getSelectedShooterRadioButton());
+        selectFirstShooter();
+        showMessagePanel();
+      }
+    };
+    shooterService.deleteShooter(shooterName, callback);
+  }
+
+  void populateShooters() {
+    AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
+      public void onFailure(Throwable caught) {
+        Window.alert("Error while retrieving shooters: " + caught.getMessage());
+      }
+      public void onSuccess(List<String> shooters) {
+        for (String shooter : shooters)
+          addShooter(buildShooterRadioButton(shooter));
+      }
+    };
+    shooterService.listShooters(callback);
   }
 
   void showScriptPanel() {
@@ -84,6 +131,14 @@ public class Shooter extends Composite {
     editButton.setEnabled(false);
   }
   
+  void enableDeleteButton() {
+    deleteButton.setEnabled(true);
+  }
+
+  void disableDeleteButton() {
+    deleteButton.setEnabled(false);
+  }
+
   void setConfiguration(Configuration configuration) {
     this.configuration = configuration;
   }
@@ -92,55 +147,25 @@ public class Shooter extends Composite {
     this.content = content;
   }
 
-  private void saveShooter(final String shooterName) {
-    AsyncCallback<Void> callback = new AsyncCallback<Void>() {
-      public void onFailure(Throwable caught) {
-        if (caught instanceof ExistingShooterException)
-          Window.alert("This shooterName is already taken.");
-        else
-          Window.alert("Error while creating shooter: " + caught.getMessage());
-      }
-      public void onSuccess(Void success) {
-        RadioButton newShooter = buildShooterRadioButton(shooterName);
-        newShooter.setValue(true);
-        addShooter(newShooter);
-        onEditButtonClicked(null);
-      }
-    };
-    shooterService.saveShooter(shooterName, callback);
-  }
-
-  private void deleteShooter(final String shooterName) {
-    AsyncCallback<Void> callback = new AsyncCallback<Void>() {
-      public void onFailure(Throwable caught) {
-        Window.alert("Error while deleting shooter: " + caught.getMessage());
-      }
-      public void onSuccess(Void success) {
-        removeShooter(getSelectedShooter());
-        selectFirstShooter();
-      }
-    };
-    shooterService.deleteShooter(shooterName, callback);
-  }
-
-  private void populateShooters() {
-    AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
-      public void onFailure(Throwable caught) {
-        Window.alert("Error while retrieving shooters: " + caught.getMessage());
-      }
-      public void onSuccess(List<String> shooters) {
-        for (String shooter : shooters)
-          addShooter(buildShooterRadioButton(shooter));
-      }
-    };
-    shooterService.listShooters(callback);
+  String getSelectedShooter() {
+    return getSelectedShooterRadioButton().getText();
   }
 
   private void selectFirstShooter() {
-    if (shooterPanel.getWidgetCount() > 0) {
+    if (hasAtLeastOneShooter()) {
       RadioButton firstShooter = (RadioButton) shooterPanel.getWidget(0);
       firstShooter.setValue(true);
+      enableEditButton();
+      enableDeleteButton();
     }
+    else {
+      disableEditButton();
+      disableDeleteButton();
+    }
+  }
+
+  private boolean hasAtLeastOneShooter() {
+    return shooterPanel.getWidgetCount() > 0;
   }
 
   private void addShooter(RadioButton shooter) {
@@ -161,23 +186,28 @@ public class Shooter extends Composite {
     return false;
   }
 
-  private RadioButton getSelectedShooter() {
+  private RadioButton getSelectedShooterRadioButton() {
     for (RadioButton shooter : shooters.values()) {
       if (shooter.getValue())
         return shooter;
     }
-    throw new IllegalStateException("There is no shooter selected");
+    throw new IllegalStateException("There is no shooter selected!");
   }
 
   private RadioButton buildShooterRadioButton(String name) {
     RadioButton newShooter = new RadioButton("shooters", name);
     newShooter.addClickHandler(new ClickHandler() {
       public void onClick(ClickEvent event) {
-        enableEditButton();
-        showMessagePanel();
+        onSelectedShooterClicked();
       }
     });
     return newShooter;
+  }
+
+  void onSelectedShooterClicked() {
+    enableEditButton();
+    enableDeleteButton();
+    showMessagePanel();
   }
 
   private String askNewShooterName() {

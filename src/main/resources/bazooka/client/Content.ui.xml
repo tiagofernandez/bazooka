@@ -12,6 +12,7 @@
         <div class="{style.section}">Groovy Script</div>
         <div style="padding-top: 1em;">
           <g:Button ui:field="saveScriptButton">Save</g:Button>
+          <g:Button ui:field="cancelButton">Cancel</g:Button>
         </div>
         <div class="{style.textWrapper}" ui:field="scriptTextAreaDiv"/>
       </g:HTMLPanel>

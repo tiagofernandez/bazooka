@@ -8,8 +8,8 @@
 
       <g:HorizontalPanel spacing="10">
         <g:Button ui:field="newButton">New</g:Button>
-        <g:Button ui:field="editButton">Edit</g:Button>
-        <g:Button ui:field="deleteButton">Delete</g:Button>
+        <g:Button ui:field="editButton" enabled="false">Edit</g:Button>
+        <g:Button ui:field="deleteButton" enabled="false">Delete</g:Button>
       </g:HorizontalPanel>
 
       <g:VerticalPanel ui:field="shooterPanel" spacing="10"/>

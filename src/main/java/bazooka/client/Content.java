@@ -1,5 +1,8 @@
 package bazooka.client;
 
+import bazooka.client.exception.NonExistingShooterException;
+import bazooka.client.service.ShooterService;
+import bazooka.client.service.ShooterServiceAsync;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -10,6 +13,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.TextArea;
@@ -26,6 +30,7 @@ public class Content extends Composite {
 
   @UiField Panel scriptPanel;
   @UiField Button saveScriptButton;
+  @UiField Button cancelButton;
   @UiField DivElement scriptTextAreaDiv;
   @UiField Panel messagePanel;
 
@@ -41,6 +46,7 @@ public class Content extends Composite {
   private TextArea responseTextArea;
 
   private final Map<String, String> requests = new HashMap<String, String>();
+  private final ShooterServiceAsync shooterService = GWT.create(ShooterService.class);
 
   private Shooter shooter;
 
@@ -55,8 +61,13 @@ public class Content extends Composite {
 
   @UiHandler("saveScriptButton")
   void onSaveScriptButtonClicked(ClickEvent event) {
-    shooter.showMessagePanel();
-    shooter.enableEditButton();
+    saveScript(scriptTextArea.getText(), shooter.getSelectedShooter());
+  }
+
+  @UiHandler("cancelButton")
+  void onCancelButtonClicked(ClickEvent event) {
+    shooter.onSelectedShooterClicked();
+    getShooterScript(shooter.getSelectedShooter());
   }
 
   @UiHandler("saveRequestAsButton")
@@ -102,6 +113,34 @@ public class Content extends Composite {
   @UiHandler("requestList")
   void onRequestListKeyUp(KeyUpEvent event) {
     onRequestListChanged(null);
+  }
+
+  void saveScript(final String script, final String shooterName) {
+    AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+      public void onFailure(Throwable caught) {
+        if (caught instanceof NonExistingShooterException)
+          Window.alert("Cannot save script for a non-existing shooter.");
+        else
+          Window.alert("Error while saving script: " + caught.getMessage());
+      }
+      public void onSuccess(Void success) {
+        shooter.showMessagePanel();
+        shooter.enableEditButton();
+      }
+    };
+    shooterService.saveScript(script, shooterName, callback);
+  }
+
+  void getShooterScript(final String shooterName) {
+    AsyncCallback<String> callback = new AsyncCallback<String>() {
+      public void onFailure(Throwable caught) {
+        Window.alert("Error while getting script: " + caught.getMessage());
+      }
+      public void onSuccess(String script) {
+        scriptTextArea.setValue(script);
+      }
+    };
+    shooterService.getShooterScript(shooterName, callback);
   }
 
   void showScriptPanel() {

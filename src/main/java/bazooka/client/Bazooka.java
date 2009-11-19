@@ -19,7 +19,7 @@ public class Bazooka implements EntryPoint {
 
   public void onModuleLoad() {
     loadRootPanel();
-    injectDependencies();
+    wireUiComponents();
   }
 
   private void loadRootPanel() {
@@ -28,7 +28,7 @@ public class Bazooka implements EntryPoint {
     root.layout();
   }
 
-  private void injectDependencies() {
+  private void wireUiComponents() {
     shortcuts.setContent(content);
     content.setShooter(shortcuts.getShooter());
   }
