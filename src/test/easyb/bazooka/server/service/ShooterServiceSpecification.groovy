@@ -47,3 +47,9 @@ it "should save and get script", {
   service.saveScript(script, shooter)
   service.getShooterScript(shooter).shouldBe script
 }
+
+it "should not save a script for a non-existing shooter", {
+  ensureThrows(NonExistingShooterException) {
+    service.saveScript("Void", "println 'Some script'")
+  }
+}

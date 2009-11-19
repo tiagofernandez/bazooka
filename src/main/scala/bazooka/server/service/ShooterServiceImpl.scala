@@ -23,8 +23,7 @@ class ShooterServiceImpl extends ShooterService {
 
   @Transactional
   def deleteShooter(shooter: String) {
-    if (!shooterExists(shooter))
-      throw new NonExistingShooterException
+    assumeShooterExists(shooter)
 
     val data = getShooterByName(shooter)
     em.get.remove(data)
@@ -39,6 +38,8 @@ class ShooterServiceImpl extends ShooterService {
 
   @Transactional
   def saveScript(script: String, shooter: String) {
+    assumeShooterExists(shooter)
+
     val data = getShooterByName(shooter)
     data.script = script
 
@@ -53,11 +54,16 @@ class ShooterServiceImpl extends ShooterService {
       .asInstanceOf[String]
   }
 
-  private def shooterExists(name: String): Boolean = {
+  private def assumeShooterExists(shooter: String) {
+    if (!shooterExists(shooter))
+      throw new NonExistingShooterException
+  }
+
+  private def shooterExists(shooter: String): Boolean = {
     try {
       em.get
         .createQuery("select s.id from Shooter s where s.name=:name")
-        .setParameter("name", name)
+        .setParameter("name", shooter)
         .getSingleResult
         .isInstanceOf[java.lang.Integer]
     }
@@ -66,16 +72,11 @@ class ShooterServiceImpl extends ShooterService {
     }
   }
 
-  private def getShooterByName(name: String) = {
-    try {
-      em.get
-        .createQuery("from Shooter s where s.name=:name")
-        .setParameter("name", name)
-        .getSingleResult
-        .asInstanceOf[ShooterData]
-    }
-    catch {
-      case ex => null
-    }
+  private def getShooterByName(shooter: String) = {
+    em.get
+      .createQuery("from Shooter s where s.name=:name")
+      .setParameter("name", shooter)
+      .getSingleResult
+      .asInstanceOf[ShooterData]
   }
 }
