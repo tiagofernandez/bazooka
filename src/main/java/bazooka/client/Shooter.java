@@ -6,16 +6,12 @@ import bazooka.client.service.ShooterServiceAsync;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Shooter extends Composite {
 
@@ -54,7 +50,7 @@ public class Shooter extends Composite {
 
   @UiHandler("editButton")
   void onEditButtonClicked(ClickEvent event) {
-    content.getShooterScript(getSelectedShooter());
+    content.getScript(getSelectedShooter());
     disableEditButton();
     enableDeleteButton();
     showScriptPanel();

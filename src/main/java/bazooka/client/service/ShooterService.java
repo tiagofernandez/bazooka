@@ -18,5 +18,5 @@ public interface ShooterService extends RemoteService {
 
   void saveScript(String script, String shooter);
 
-  String getShooterScript(String shooter);
+  String getScript(String shooter);
 }

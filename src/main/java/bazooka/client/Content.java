@@ -5,13 +5,8 @@ import bazooka.client.service.ShooterService;
 import bazooka.client.service.ShooterServiceAsync;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.event.dom.client.*;
+import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
@@ -67,7 +62,7 @@ public class Content extends Composite {
   @UiHandler("cancelButton")
   void onCancelButtonClicked(ClickEvent event) {
     shooter.onSelectedShooterClicked();
-    getShooterScript(shooter.getSelectedShooter());
+    getScript(shooter.getSelectedShooter());
   }
 
   @UiHandler("saveRequestAsButton")
@@ -131,7 +126,7 @@ public class Content extends Composite {
     shooterService.saveScript(script, shooterName, callback);
   }
 
-  void getShooterScript(final String shooterName) {
+  void getScript(final String shooterName) {
     AsyncCallback<String> callback = new AsyncCallback<String>() {
       public void onFailure(Throwable caught) {
         Window.alert("Error while getting script: " + caught.getMessage());
@@ -140,7 +135,7 @@ public class Content extends Composite {
         scriptTextArea.setValue(script);
       }
     };
-    shooterService.getShooterScript(shooterName, callback);
+    shooterService.getScript(shooterName, callback);
   }
 
   void showScriptPanel() {

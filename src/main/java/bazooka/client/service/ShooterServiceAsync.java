@@ -14,5 +14,5 @@ public interface ShooterServiceAsync {
 
   void saveScript(String script, String shooter, AsyncCallback<Void> async);
 
-  void getShooterScript(String shooter, AsyncCallback<String> async);
+  void getScript(String shooter, AsyncCallback<String> async);
 }

@@ -7,12 +7,12 @@ import bazooka.server.persistence.PersistenceModule
 
 service = new BazookaContext(new PersistenceModule("bazooka-test")).injector.getInstance(ShooterServiceImpl.class)
 
-it "should create a new shooter", {
+it "should save a new shooter", {
   final def shooter = "Hurl"
   service.saveShooter(shooter)
 }
 
-it "should not create shooters with the same name", {
+it "should not save shooters with the same name", {
   final def shooter = "Curl"
   service.saveShooter(shooter)
 
@@ -45,7 +45,7 @@ it "should save and get script", {
 
   service.saveShooter(shooter)
   service.saveScript(script, shooter)
-  service.getShooterScript(shooter).shouldBe script
+  service.getScript(shooter).shouldBe script
 }
 
 it "should not save a script for a non-existing shooter", {

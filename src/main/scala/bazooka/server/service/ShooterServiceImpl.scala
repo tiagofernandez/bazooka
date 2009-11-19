@@ -14,19 +14,19 @@ class ShooterServiceImpl extends ShooterService {
   @Inject var em: Provider[EntityManager] = _
 
   @Transactional
-  def saveShooter(shooter: String) {
-    if (shooterExists(shooter))
+  def saveShooter(name: String) {
+    if (shooterExists(name))
       throw new ExistingShooterException
 
-    em.get.persist(new ShooterData(shooter))
+    em.get.persist(new ShooterData(name))
   }
 
   @Transactional
-  def deleteShooter(shooter: String) {
-    assumeShooterExists(shooter)
+  def deleteShooter(name: String) {
+    assumeShooterExists(name)
 
-    val data = getShooterByName(shooter)
-    em.get.remove(data)
+    val shooter = getShooterByName(name)
+    em.get.remove(shooter)
   }
 
   def listShooters() = {
@@ -46,7 +46,7 @@ class ShooterServiceImpl extends ShooterService {
     em.get.merge(data)
   }
 
-  def getShooterScript(shooter: String) = {
+  def getScript(shooter: String) = {
     em.get
       .createQuery("select s.script from Shooter s where s.name=:name")
       .setParameter("name", shooter)
