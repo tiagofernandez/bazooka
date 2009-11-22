@@ -1,7 +1,7 @@
-package bazooka.client.service;
+package bazooka.common.service;
 
-import bazooka.client.exception.ExistingShooterException;
-import bazooka.client.exception.NonExistingShooterException;
+import bazooka.common.exception.ExistingShooterException;
+import bazooka.common.exception.NonExistingShooterException;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 

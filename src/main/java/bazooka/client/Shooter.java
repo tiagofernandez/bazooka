@@ -1,8 +1,8 @@
 package bazooka.client;
 
-import bazooka.client.exception.ExistingShooterException;
-import bazooka.client.service.ShooterService;
-import bazooka.client.service.ShooterServiceAsync;
+import bazooka.common.exception.ExistingShooterException;
+import bazooka.common.service.ShooterService;
+import bazooka.common.service.ShooterServiceAsync;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

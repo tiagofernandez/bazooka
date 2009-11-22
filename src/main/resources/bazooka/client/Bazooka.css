@@ -50,7 +50,7 @@ a:visited {
 }
 
 .section {
-  background: #c1eec8 url(images/gradient.gif) repeat-x 0px -1px;
+  background: #c1eec8 url(images/gradient.png) repeat-x 0px -1px;
   border: 1px solid #666;
   font-weight: bold;
   padding-left: 1em;
@@ -64,7 +64,7 @@ a:visited {
 }
 
 .stackHeader {
-  background: #c1eec8 url(images/gradient.gif) repeat-x 0px -1px;
+  background: #c1eec8 url(images/gradient.png) repeat-x 0px -1px;
   padding-top: 1em;
   font-weight: bold;
   text-align: center;

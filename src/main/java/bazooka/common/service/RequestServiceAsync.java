@@ -1,4 +1,4 @@
-package bazooka.client.service;
+package bazooka.common.service;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

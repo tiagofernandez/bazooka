@@ -1,7 +1,7 @@
 package bazooka.server.service
 
-import bazooka.client.exception._
-import bazooka.client.service._
+import bazooka.common.exception._
+import bazooka.common.service._
 import bazooka.server.data._
 
 import com.google.inject._

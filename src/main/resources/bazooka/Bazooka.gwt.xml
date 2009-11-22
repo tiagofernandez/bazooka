@@ -4,6 +4,9 @@
   <inherits name="com.gwtext.GwtExt"/>
   <inherits name="com.google.gwt.uibinder.UiBinder"/>
 
+  <source path="client"/>
+  <source path="common"/>
+
   <entry-point class="bazooka.client.Bazooka"/>
 
   <stylesheet src="js/ext/resources/css/ext-all.css"/>

@@ -1,7 +1,7 @@
 package bazooka.server.service
 
-import bazooka.client.exception.ExistingShooterException
-import bazooka.client.exception.NonExistingShooterException
+import bazooka.common.exception.ExistingShooterException
+import bazooka.common.exception.NonExistingShooterException
 import bazooka.server.context.BazookaContext
 import bazooka.server.persistence.PersistenceModule
 

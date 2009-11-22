@@ -1,7 +1,7 @@
-package bazooka.client.service;
+package bazooka.common.service;
 
-import bazooka.client.exception.ExistingRequestException;
-import bazooka.client.exception.NonExistingRequestException;
+import bazooka.common.exception.ExistingRequestException;
+import bazooka.common.exception.NonExistingRequestException;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 

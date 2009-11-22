@@ -1,6 +1,6 @@
 package bazooka.server.servlet
 
-import bazooka.client.service._
+import bazooka.common.service._
 import bazooka.server.service._
 
 import com.google.inject.servlet.ServletModule
