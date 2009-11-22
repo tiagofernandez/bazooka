@@ -6,77 +6,56 @@ import bazooka.server.data._
 
 import com.google.inject._
 import com.wideplay.warp.persist._
-
 import javax.persistence._
 
 class RequestServiceImpl extends RequestService {
 
-  @Inject var em: Provider[EntityManager] = _
+  var repo: RequestRepository = _
+
+  @Inject
+  def initRepositories(em: Provider[EntityManager]) {
+    repo = new RequestRepository(em)
+  }
 
   @Transactional
   def saveRequest(name: String, payload: String) {
-    if (requestExists(name))
+    if (repo.requestExists(name))
       throw new ExistingRequestException
 
-    em.get.persist(new RequestData(name))
+    val request = new RequestData(name)
+    request.payload = payload
+    
+    repo.persist(request)
   }
 
   @Transactional
   def deleteRequest(name: String) {
     assumeRequestExists(name)
 
-    val request = getRequestByName(name)
-    em.get.remove(request)
+    val request = repo.getRequestByName(name)
+    repo.remove(request)
   }
 
   def listRequests() = {
-    em.get
-      .createQuery("select r.name from Request r order by r.name")
-      .getResultList
-      .asInstanceOf[java.util.List[String]]
+    repo.listRequests
   }
 
   @Transactional
   def savePayload(payload: String, request: String) {
     assumeRequestExists(request)
 
-    val data = getRequestByName(request)
+    val data = repo.getRequestByName(request)
     data.payload = payload
 
-    em.get.merge(data)
+    repo.merge(data)
   }
 
   def getPayload(request: String) = {
-    em.get
-      .createQuery("select r.payload from Request r where r.name=:name")
-      .setParameter("name", request)
-      .getSingleResult
-      .asInstanceOf[String]
+    repo.getPayload(request)
   }
 
   private def assumeRequestExists(request: String) {
-    if (!requestExists(request))
+    if (!repo.requestExists(request))
       throw new NonExistingRequestException
-  }
-
-  private def requestExists(request: String): Boolean = {
-    try {
-      em.get
-        .createQuery("select r.id from Request r where r.name=:name")
-        .setParameter("name", request)
-        .getSingleResult
-        .isInstanceOf[java.lang.Integer]
-    }
-    catch {
-      case ex => false
-    }
-  }
-
-  private def getRequestByName(request: String) = {
-    em.get
-      .createQuery("from Request r where r.name=:name")
-      .setParameter("name", request)
-      .getSingleResult
-      .asInstanceOf[RequestData]
   }
 }

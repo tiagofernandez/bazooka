@@ -6,77 +6,53 @@ import bazooka.server.data._
 
 import com.google.inject._
 import com.wideplay.warp.persist._
-
 import javax.persistence._
 
 class ShooterServiceImpl extends ShooterService {
 
-  @Inject var em: Provider[EntityManager] = _
+  var repo: ShooterRepository = _
+
+  @Inject
+  def initRepositories(em: Provider[EntityManager]) {
+    repo = new ShooterRepository(em)
+  }
 
   @Transactional
   def saveShooter(name: String) {
-    if (shooterExists(name))
+    if (repo.shooterExists(name))
       throw new ExistingShooterException
 
-    em.get.persist(new ShooterData(name))
+    repo.persist(new ShooterData(name))
   }
 
   @Transactional
   def deleteShooter(name: String) {
     assumeShooterExists(name)
 
-    val shooter = getShooterByName(name)
-    em.get.remove(shooter)
+    val shooter = repo.getShooterByName(name)
+    repo.remove(shooter)
   }
 
   def listShooters() = {
-    em.get
-      .createQuery("select s.name from Shooter s order by s.name")
-      .getResultList
-      .asInstanceOf[java.util.List[String]]
+    repo.listShooters
   }
 
   @Transactional
   def saveScript(script: String, shooter: String) {
     assumeShooterExists(shooter)
 
-    val data = getShooterByName(shooter)
+    val data = repo.getShooterByName(shooter)
     data.script = script
 
-    em.get.merge(data)
+    repo.merge(data)
   }
 
   def getScript(shooter: String) = {
-    em.get
-      .createQuery("select s.script from Shooter s where s.name=:name")
-      .setParameter("name", shooter)
-      .getSingleResult
-      .asInstanceOf[String]
+    repo.getScript(shooter)
   }
 
   private def assumeShooterExists(shooter: String) {
-    if (!shooterExists(shooter))
+    if (!repo.shooterExists(shooter))
       throw new NonExistingShooterException
-  }
-
-  private def shooterExists(shooter: String): Boolean = {
-    try {
-      em.get
-        .createQuery("select s.id from Shooter s where s.name=:name")
-        .setParameter("name", shooter)
-        .getSingleResult
-        .isInstanceOf[java.lang.Integer]
-    }
-    catch {
-      case ex => false
-    }
-  }
-
-  private def getShooterByName(shooter: String) = {
-    em.get
-      .createQuery("from Shooter s where s.name=:name")
-      .setParameter("name", shooter)
-      .getSingleResult
-      .asInstanceOf[ShooterData]
   }
 }
