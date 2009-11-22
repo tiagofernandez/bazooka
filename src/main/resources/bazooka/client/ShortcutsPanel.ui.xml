@@ -11,14 +11,14 @@
       <g:header size="3">
         <g:Label styleName="{style.stackHeader}">Shooter</g:Label>
       </g:header>
-      <bazooka:Shooter ui:field="shooter"/>
+      <bazooka:ShooterPanel ui:field="shooterPanel"/>
     </g:stack>
 
     <g:stack>
       <g:header size="3">
         <g:Label styleName="{style.stackHeader}">Configuration</g:Label>
       </g:header>
-      <bazooka:Configuration ui:field="configuration"/>
+      <bazooka:ConfigurationPanel ui:field="configurationPanel"/>
     </g:stack>
 
   </g:StackLayoutPanel>

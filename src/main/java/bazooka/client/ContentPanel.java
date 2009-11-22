@@ -17,9 +17,9 @@ import com.gwtext.client.widgets.form.event.FieldListenerAdapter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Content extends Composite {
+public class ContentPanel extends Composite {
 
-  interface Binder extends UiBinder<Widget, Content> {}
+  interface Binder extends UiBinder<Widget, ContentPanel> {}
 
   private static final Binder binder = GWT.create(Binder.class);
 
@@ -43,9 +43,9 @@ public class Content extends Composite {
   private final Map<String, String> requests = new HashMap<String, String>();
   private final ShooterServiceAsync shooterService = GWT.create(ShooterService.class);
 
-  private Shooter shooter;
+  private ShooterPanel shooterPanel;
 
-  Content() {
+  ContentPanel() {
     initWidget(binder.createAndBindUi(this));
   }
 
@@ -56,13 +56,13 @@ public class Content extends Composite {
 
   @UiHandler("saveScriptButton")
   void onSaveScriptButtonClicked(ClickEvent event) {
-    saveScript(scriptTextArea.getText(), shooter.getSelectedShooter());
+    saveScript(scriptTextArea.getText(), shooterPanel.getSelectedShooter());
   }
 
   @UiHandler("cancelButton")
   void onCancelButtonClicked(ClickEvent event) {
-    shooter.onSelectedShooterClicked();
-    getScript(shooter.getSelectedShooter());
+    shooterPanel.onSelectedShooterClicked();
+    getScript(shooterPanel.getSelectedShooter());
   }
 
   @UiHandler("saveRequestAsButton")
@@ -119,8 +119,8 @@ public class Content extends Composite {
           Window.alert("Error while saving script: " + caught.getMessage());
       }
       public void onSuccess(Void success) {
-        shooter.showMessagePanel();
-        shooter.enableEditButton();
+        shooterPanel.showMessagePanel();
+        shooterPanel.enableEditButton();
       }
     };
     shooterService.saveScript(script, shooterName, callback);
@@ -154,8 +154,8 @@ public class Content extends Composite {
     messagePanel.setVisible(false);
   }
 
-  void setShooter(Shooter shooter) {
-    this.shooter = shooter;
+  void setShooterPanel(ShooterPanel shooterPanel) {
+    this.shooterPanel = shooterPanel;
   }
 
   private void loadTextAreas() {

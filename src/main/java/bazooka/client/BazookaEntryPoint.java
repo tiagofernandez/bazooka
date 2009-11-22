@@ -7,15 +7,15 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
-public class Bazooka implements EntryPoint {
+public class BazookaEntryPoint implements EntryPoint {
 
-  interface Binder extends UiBinder<DockLayoutPanel, Bazooka> {}
+  interface Binder extends UiBinder<DockLayoutPanel, BazookaEntryPoint> {}
 
   private static final Binder binder = GWT.create(Binder.class);
 
   @UiField TopPanel topPanel;
-  @UiField Shortcuts shortcuts;
-  @UiField Content content;
+  @UiField ShortcutsPanel shortcutsPanel;
+  @UiField ContentPanel contentPanel;
 
   public void onModuleLoad() {
     loadRootPanel();
@@ -29,7 +29,7 @@ public class Bazooka implements EntryPoint {
   }
 
   private void wireUiComponents() {
-    shortcuts.setContent(content);
-    content.setShooter(shortcuts.getShooter());
+    shortcutsPanel.setContentPanel(contentPanel);
+    contentPanel.setShooterPanel(shortcutsPanel.getShooterPanel());
   }
 }

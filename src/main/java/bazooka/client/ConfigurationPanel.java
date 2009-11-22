@@ -9,9 +9,9 @@ import com.google.gwt.user.client.ui.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Configuration extends Composite {
+public class ConfigurationPanel extends Composite {
 
-  interface Binder extends UiBinder<Widget, Configuration> {}
+  interface Binder extends UiBinder<Widget, ConfigurationPanel> {}
 
   private static final Binder binder = GWT.create(Binder.class);
 
@@ -25,7 +25,7 @@ public class Configuration extends Composite {
 
   private final Map<String, Map<String, String>> configurations = new HashMap<String, Map<String, String>>();
 
-  Configuration() {
+  ConfigurationPanel() {
     initWidget(binder.createAndBindUi(this));
   }
 

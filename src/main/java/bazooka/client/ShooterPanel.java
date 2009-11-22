@@ -13,9 +13,9 @@ import com.google.gwt.user.client.ui.*;
 
 import java.util.*;
 
-public class Shooter extends Composite {
+public class ShooterPanel extends Composite {
 
-  interface Binder extends UiBinder<Widget, Shooter> {}
+  interface Binder extends UiBinder<Widget, ShooterPanel> {}
 
   private static final Binder binder = GWT.create(Binder.class);
 
@@ -27,11 +27,11 @@ public class Shooter extends Composite {
   private final Map<String, RadioButton> shooters = new HashMap<String, RadioButton>();
   private final ShooterServiceAsync shooterService = GWT.create(ShooterService.class);
 
-  private Configuration configuration;
+  private ConfigurationPanel configurationPanel;
 
-  private Content content;
+  private ContentPanel contentPanel;
 
-  Shooter() {
+  ShooterPanel() {
     initWidget(binder.createAndBindUi(this));
   }
 
@@ -50,7 +50,7 @@ public class Shooter extends Composite {
 
   @UiHandler("editButton")
   void onEditButtonClicked(ClickEvent event) {
-    content.getScript(getSelectedShooter());
+    contentPanel.getScript(getSelectedShooter());
     disableEditButton();
     enableDeleteButton();
     showScriptPanel();
@@ -110,13 +110,13 @@ public class Shooter extends Composite {
   }
 
   void showScriptPanel() {
-    content.hideMessagePanel();
-    content.showScriptPanel();
+    contentPanel.hideMessagePanel();
+    contentPanel.showScriptPanel();
   }
 
   void showMessagePanel() {
-    content.hideScriptPanel();
-    content.showMessagePanel();
+    contentPanel.hideScriptPanel();
+    contentPanel.showMessagePanel();
   }
 
   void enableEditButton() {
@@ -135,12 +135,12 @@ public class Shooter extends Composite {
     deleteButton.setEnabled(false);
   }
 
-  void setConfiguration(Configuration configuration) {
-    this.configuration = configuration;
+  void setConfiguration(ConfigurationPanel configurationPanel) {
+    this.configurationPanel = configurationPanel;
   }
 
-  void setContent(Content content) {
-    this.content = content;
+  void setContent(ContentPanel contentPanel) {
+    this.contentPanel = contentPanel;
   }
 
   String getSelectedShooter() {

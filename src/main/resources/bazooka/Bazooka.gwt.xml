@@ -7,7 +7,7 @@
   <source path="client"/>
   <source path="common"/>
 
-  <entry-point class="bazooka.client.Bazooka"/>
+  <entry-point class="bazooka.client.BazookaEntryPoint"/>
 
   <stylesheet src="js/ext/resources/css/ext-all.css"/>
   <script src="js/ext/adapter/ext/ext-base.js"/>
