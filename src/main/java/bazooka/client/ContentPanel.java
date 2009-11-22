@@ -87,8 +87,12 @@ public class ContentPanel extends Composite {
 
   @UiHandler("shootButton")
   void onShootButtonClicked(ClickEvent event) {
-    selectDefaultRequestIfChanged();
-    responseTextArea.setValue("BOOM!");
+    if (shooterPanel.hasSelectedShooter()) {
+      selectDefaultRequestIfChanged();
+      responseTextArea.setValue("BOOM!");
+    }
+    else
+      Window.alert("Please select a shooter.");
   }
 
   @UiHandler("requestList")

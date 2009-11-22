@@ -12,10 +12,8 @@ public class ShortcutsPanel extends LayoutComposite {
 
   private static final Binder binder = GWT.create(Binder.class);
 
-  @UiField
-  ShooterPanel shooterPanel;
-  @UiField
-  ConfigurationPanel configurationPanel;
+  @UiField ShooterPanel shooterPanel;
+  @UiField ConfigurationPanel configurationPanel;
 
   ShortcutsPanel() {
     initWidget(binder.createAndBindUi(this));

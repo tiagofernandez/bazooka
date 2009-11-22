@@ -143,14 +143,21 @@ public class ShooterPanel extends Composite {
     this.contentPanel = contentPanel;
   }
 
+  boolean hasSelectedShooter() {
+    for (RadioButton shooter : shooters.values()) {
+      if (shooter.getValue())
+        return true;
+    }
+    return false;
+  }
+
   String getSelectedShooter() {
     return getSelectedShooterRadioButton().getText();
   }
 
   private void selectFirstShooter() {
     if (hasAtLeastOneShooter()) {
-      RadioButton firstShooter = (RadioButton) shooterPanel.getWidget(0);
-      firstShooter.setValue(true);
+      getFirstShooter().setValue(true);
       enableEditButton();
       enableDeleteButton();
     }
@@ -162,6 +169,10 @@ public class ShooterPanel extends Composite {
 
   private boolean hasAtLeastOneShooter() {
     return shooterPanel.getWidgetCount() > 0;
+  }
+
+  private RadioButton getFirstShooter() {
+    return (RadioButton) shooterPanel.getWidget(0);
   }
 
   private void addShooter(RadioButton shooter) {
