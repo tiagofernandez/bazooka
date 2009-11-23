@@ -8,22 +8,35 @@ import bazooka.server.persistence.PersistenceModule
 service = new BazookaContext(new PersistenceModule("bazooka-test")).injector.getInstance(ShooterServiceImpl.class)
 
 it "should save a new shooter", {
-  final def shooter = "Hurl"
-  service.saveShooter(shooter)
+  service.saveShooter("Hurl", "")
 }
 
 it "should not save shooters with the same name", {
-  final def shooter = "Curl"
-  service.saveShooter(shooter)
+  shooter = "Curl"
+  service.saveShooter(shooter, "")
 
   ensureThrows(ExistingShooterException) {
-    service.saveShooter(shooter)
+    service.saveShooter(shooter, "")
 	}
 }
 
+it "should not save a script for a non-existing shooter", {
+  ensureThrows(NonExistingShooterException) {
+    service.updateShooter("Void", "println 'Some script'")
+  }
+}
+
+it "should save a shooter and get its script", {
+  shooter = "AK-47"
+  script = "println 'Anything you want'"
+
+  service.saveShooter(shooter, script)
+  service.getScript(shooter).shouldBe script
+}
+
 it "should delete an existing shooter", {
-  final def shooter = "AR-15"
-  service.saveShooter(shooter)
+  shooter = "AR-15"
+  service.saveShooter(shooter, "")
   service.deleteShooter(shooter)
 }
 
@@ -34,22 +47,7 @@ it "should not delete a shooter that does not exist", {
 }
 
 it "should list the existing shooters", {
-  service.saveShooter("Foo")
-  service.saveShooter("Bar")
+  service.saveShooter("Foo", "")
+  service.saveShooter("Bar", "")
   service.listShooters().size().shouldBeGreaterThan 2
-}
-
-it "should save and get script", {
-  final def shooter = "AK-47"
-  final def script = "println 'Anything you want'"
-
-  service.saveShooter(shooter)
-  service.saveScript(script, shooter)
-  service.getScript(shooter).shouldBe script
-}
-
-it "should not save a script for a non-existing shooter", {
-  ensureThrows(NonExistingShooterException) {
-    service.saveScript("Void", "println 'Some script'")
-  }
 }

@@ -18,37 +18,45 @@ class ShooterServiceImpl extends ShooterService {
   }
 
   @Transactional
-  def saveShooter(name: String) {
-    if (repo.shooterExists(name))
-      throw new ExistingShooterException
+  def saveShooter(shooter: String, script: String) {
+    assumeShooterNotExists(shooter)
 
-    repo.persist(new ShooterData(name))
+    val data: ShooterData = new ShooterData(shooter)
+    data.script = script
+
+    repo.persist(data)
   }
 
   @Transactional
-  def deleteShooter(name: String) {
-    assumeShooterExists(name)
-
-    val shooter = repo.getShooterByName(name)
-    repo.remove(shooter)
-  }
-
-  def listShooters() = {
-    repo.listShooters
-  }
-
-  @Transactional
-  def saveScript(script: String, shooter: String) {
+  def updateShooter(shooter: String, script: String) {
     assumeShooterExists(shooter)
-
+    
     val data = repo.getShooterByName(shooter)
     data.script = script
 
     repo.merge(data)
   }
 
+  @Transactional
+  def deleteShooter(shooter: String) {
+    assumeShooterExists(shooter)
+
+    val data = repo.getShooterByName(shooter)
+    repo.remove(data)
+  }
+
+  def listShooters() = {
+    repo.listShooters
+  }
+
   def getScript(shooter: String) = {
+    assumeShooterExists(shooter)
     repo.getScript(shooter)
+  }
+
+  private def assumeShooterNotExists(shooter: String) {
+    if (repo.shooterExists(shooter))
+      throw new ExistingShooterException
   }
 
   private def assumeShooterExists(shooter: String) {

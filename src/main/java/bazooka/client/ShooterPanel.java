@@ -79,7 +79,7 @@ public class ShooterPanel extends Composite {
         onEditButtonClicked(null);
       }
     };
-    shooterService.saveShooter(shooterName, callback);
+    shooterService.saveShooter(shooterName, "", callback);
   }
 
   void deleteShooter(final String shooterName) {

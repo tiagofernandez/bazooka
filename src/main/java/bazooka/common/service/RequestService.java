@@ -10,13 +10,13 @@ import java.util.List;
 @RemoteServiceRelativePath("GWT.rpc")
 public interface RequestService extends RemoteService {
 
-  void saveRequest(String name, String payload) throws ExistingRequestException;
+  void saveRequest(String request, String payload) throws ExistingRequestException;
 
-  void deleteRequest(String name) throws NonExistingRequestException;
+  void updateRequest(String request, String payload) throws NonExistingRequestException;
+
+  String getPayload(String request) throws NonExistingRequestException;
+
+  void deleteRequest(String request) throws NonExistingRequestException;
 
   List<String> listRequests();
-
-  void savePayload(String payload, String request);
-
-  String getPayload(String request);
 }

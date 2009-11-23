@@ -10,13 +10,13 @@ import java.util.List;
 @RemoteServiceRelativePath("GWT.rpc")
 public interface ShooterService extends RemoteService {
 
-  void saveShooter(String name) throws ExistingShooterException;
+  void saveShooter(String request, String script) throws ExistingShooterException;
 
-  void deleteShooter(String name) throws NonExistingShooterException;
+  void updateShooter(String request, String script) throws NonExistingShooterException;
+
+  String getScript(String shooter) throws NonExistingShooterException;
+
+  void deleteShooter(String request) throws NonExistingShooterException;
 
   List<String> listShooters();
-
-  void saveScript(String script, String shooter);
-
-  String getScript(String shooter);
 }

@@ -18,30 +18,17 @@ class RequestServiceImpl extends RequestService {
   }
 
   @Transactional
-  def saveRequest(name: String, payload: String) {
-    if (repo.requestExists(name))
-      throw new ExistingRequestException
+  def saveRequest(request: String, payload: String) {
+    assumeRequestNotExists(request)
 
-    val request = new RequestData(name)
-    request.payload = payload
-    
-    repo.persist(request)
+    val data: RequestData = new RequestData(request)
+    data.payload = payload
+
+    repo.persist(data)
   }
 
   @Transactional
-  def deleteRequest(name: String) {
-    assumeRequestExists(name)
-
-    val request = repo.getRequestByName(name)
-    repo.remove(request)
-  }
-
-  def listRequests() = {
-    repo.listRequests
-  }
-
-  @Transactional
-  def savePayload(payload: String, request: String) {
+  def updateRequest(request: String, payload: String) {
     assumeRequestExists(request)
 
     val data = repo.getRequestByName(request)
@@ -50,8 +37,26 @@ class RequestServiceImpl extends RequestService {
     repo.merge(data)
   }
 
+  @Transactional
+  def deleteRequest(request: String) {
+    assumeRequestExists(request)
+
+    val data = repo.getRequestByName(request)
+    repo.remove(data)
+  }
+
+  def listRequests() = {
+    repo.listRequests
+  }
+
   def getPayload(request: String) = {
+    assumeRequestExists(request)
     repo.getPayload(request)
+  }
+
+  private def assumeRequestNotExists(request: String) {
+    if (repo.requestExists(request))
+      throw new ExistingRequestException
   }
 
   private def assumeRequestExists(request: String) {

@@ -127,7 +127,7 @@ public class ContentPanel extends Composite {
         shooterPanel.enableEditButton();
       }
     };
-    shooterService.saveScript(script, shooterName, callback);
+    shooterService.updateShooter(shooterName, script, callback);
   }
 
   void getScript(final String shooterName) {
