@@ -1,6 +1,7 @@
 package bazooka.client;
 
 import bazooka.common.exception.NonExistingShooterException;
+import bazooka.common.model.Shooter;
 import bazooka.common.service.ShooterService;
 import bazooka.common.service.ShooterServiceAsync;
 import com.google.gwt.core.client.GWT;
@@ -36,9 +37,9 @@ public class ContentPanel extends Composite {
   @UiField DivElement requestTextAreaDiv;
   @UiField DivElement responseTextAreaDiv;
 
-  private TextArea scriptTextArea;
-  private TextArea requestTextArea;
-  private TextArea responseTextArea;
+  TextArea scriptTextArea;
+  TextArea requestTextArea;
+  TextArea responseTextArea;
 
   private final Map<String, String> requests = new HashMap<String, String>();
   private final ShooterServiceAsync shooterService = GWT.create(ShooterService.class);
@@ -56,13 +57,13 @@ public class ContentPanel extends Composite {
 
   @UiHandler("saveScriptButton")
   void onSaveScriptButtonClicked(ClickEvent event) {
-    saveScript(scriptTextArea.getText(), shooterPanel.getSelectedShooter());
+    saveScript(scriptTextArea.getText());
   }
 
   @UiHandler("cancelButton")
   void onCancelButtonClicked(ClickEvent event) {
     shooterPanel.onSelectedShooterClicked();
-    getScript(shooterPanel.getSelectedShooter());
+    scriptTextArea.setValue(shooterPanel.getSelectedShooter().getScript());
   }
 
   @UiHandler("saveRequestAsButton")
@@ -114,32 +115,22 @@ public class ContentPanel extends Composite {
     onRequestListChanged(null);
   }
 
-  void saveScript(final String script, final String shooterName) {
-    AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+  void saveScript(final String script) {
+    final Shooter shooter = shooterPanel.getSelectedShooter();
+    shooter.setScript(script);
+
+    shooterService.updateShooter(shooter, new AsyncCallback<Shooter>() {
       public void onFailure(Throwable caught) {
         if (caught instanceof NonExistingShooterException)
           Window.alert("Cannot save script for a non-existing shooter.");
         else
           Window.alert("Error while saving script: " + caught.getMessage());
       }
-      public void onSuccess(Void success) {
+      public void onSuccess(Shooter shooter) {
         shooterPanel.showMessagePanel();
         shooterPanel.enableEditButton();
       }
-    };
-    shooterService.updateShooter(shooterName, script, callback);
-  }
-
-  void getScript(final String shooterName) {
-    AsyncCallback<String> callback = new AsyncCallback<String>() {
-      public void onFailure(Throwable caught) {
-        Window.alert("Error while getting script: " + caught.getMessage());
-      }
-      public void onSuccess(String script) {
-        scriptTextArea.setValue(script);
-      }
-    };
-    shooterService.getScript(shooterName, callback);
+    });
   }
 
   void showScriptPanel() {
@@ -160,6 +151,10 @@ public class ContentPanel extends Composite {
 
   void setShooterPanel(ShooterPanel shooterPanel) {
     this.shooterPanel = shooterPanel;
+  }
+
+  void setScript(String script) {
+    scriptTextArea.setValue(script);
   }
 
   private void loadTextAreas() {

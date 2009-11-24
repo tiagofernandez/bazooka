@@ -1,5 +1,6 @@
-package bazooka.server.data
+package bazooka.server.persistence
 
+import bazooka.common.model._
 import com.google.inject._
 import javax.persistence._
 
@@ -9,7 +10,7 @@ class ShooterRepository(entityManager: Provider[EntityManager]) extends Reposito
 
   def getShooterByName(shooter: String) = {
     getSingleResult("from Shooter s where s.name=:name", Map("name" -> shooter))
-      .asInstanceOf[ShooterData]
+      .asInstanceOf[Shooter]
   }
 
   def getScript(shooter: String) = {
@@ -18,8 +19,8 @@ class ShooterRepository(entityManager: Provider[EntityManager]) extends Reposito
   }
 
   def listShooters() = {
-    getResultList("select s.name from Shooter s order by s.name")
-      .asInstanceOf[java.util.List[String]]
+    getResultList("select s from Shooter s order by s.name")
+      .asInstanceOf[java.util.List[Shooter]]
   }
 
   def shooterExists(shooter: String): Boolean = {

@@ -2,7 +2,8 @@ package bazooka.server.service
 
 import bazooka.common.exception._
 import bazooka.common.service._
-import bazooka.server.data._
+import bazooka.common.model._
+import bazooka.server.persistence._
 
 import com.google.inject._
 import com.wideplay.warp.persist._
@@ -18,49 +19,42 @@ class RequestServiceImpl extends RequestService {
   }
 
   @Transactional
-  def saveRequest(request: String, payload: String) {
-    assumeRequestNotExists(request)
-
-    val data: RequestData = new RequestData(request)
-    data.payload = payload
-
-    repo.persist(data)
+  def saveRequest(request: Request) = {
+    assumeRequestNotExists(request.getName)
+    repo.persist(request)
+    request
   }
 
   @Transactional
-  def updateRequest(request: String, payload: String) {
-    assumeRequestExists(request)
-
-    val data = repo.getRequestByName(request)
-    data.payload = payload
-
-    repo.merge(data)
+  def updateRequest(request: Request) = {
+    assumeRequestExists(request.getName)
+    repo.merge(request)
+    request
   }
 
   @Transactional
-  def deleteRequest(request: String) {
-    assumeRequestExists(request)
+  def deleteRequest(request: Request) {
+    val name = request.getName
+    assumeRequestExists(name)
+    repo.remove(repo.getRequestByName(name))
+  }
 
-    val data = repo.getRequestByName(request)
-    repo.remove(data)
+  def getRequest(name: String) = {
+    assumeRequestExists(name)
+    repo.getRequestByName(name)
   }
 
   def listRequests() = {
     repo.listRequests
   }
 
-  def getPayload(request: String) = {
-    assumeRequestExists(request)
-    repo.getPayload(request)
-  }
-
-  private def assumeRequestNotExists(request: String) {
-    if (repo.requestExists(request))
+  private def assumeRequestNotExists(name: String) {
+    if (repo.requestExists(name))
       throw new ExistingRequestException
   }
 
-  private def assumeRequestExists(request: String) {
-    if (!repo.requestExists(request))
+  private def assumeRequestExists(name: String) {
+    if (!repo.requestExists(name))
       throw new NonExistingRequestException
   }
 }

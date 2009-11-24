@@ -1,18 +1,19 @@
 package bazooka.common.service;
 
+import bazooka.common.model.Shooter;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import java.util.List;
 
 public interface ShooterServiceAsync {
 
-  void saveShooter(String request, String script, AsyncCallback<Void> async);
+  void saveShooter(Shooter shooter, AsyncCallback<Shooter> async);
 
-  void updateShooter(String request, String script, AsyncCallback<Void> async);
+  void updateShooter(Shooter shooter, AsyncCallback<Shooter> async);
 
-  void getScript(String shooter, AsyncCallback<String> async);
+  void deleteShooter(Shooter shooter, AsyncCallback<Void> async);
 
-  void deleteShooter(String request, AsyncCallback<Void> async);
+  void getShooter(String name, AsyncCallback<Shooter> async);
 
-  void listShooters(AsyncCallback<List<String>> async);
+  void listShooters(AsyncCallback<List<Shooter>> async);
 }

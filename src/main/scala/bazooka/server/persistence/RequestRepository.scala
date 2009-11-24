@@ -1,5 +1,6 @@
-package bazooka.server.data
+package bazooka.server.persistence
 
+import bazooka.common.model._
 import com.google.inject._
 import javax.persistence._
 
@@ -9,7 +10,7 @@ class RequestRepository(entityManager: Provider[EntityManager]) extends Reposito
   
   def getRequestByName(request: String) = {
     getSingleResult("from Request r where r.name=:name", Map("name" -> request))
-      .asInstanceOf[RequestData]
+      .asInstanceOf[Request]
   }
 
   def getPayload(request: String) = {
@@ -18,8 +19,8 @@ class RequestRepository(entityManager: Provider[EntityManager]) extends Reposito
   }
 
   def listRequests() = {
-    getResultList("select r.name from Request r order by r.name")
-      .asInstanceOf[java.util.List[String]]
+    getResultList("select r from Request r order by r.name")
+      .asInstanceOf[java.util.List[Request]]
   }
 
   def requestExists(request: String): Boolean = {

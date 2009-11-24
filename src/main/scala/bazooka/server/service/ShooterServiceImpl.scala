@@ -1,12 +1,14 @@
 package bazooka.server.service
 
 import bazooka.common.exception._
+import bazooka.common.model._
 import bazooka.common.service._
-import bazooka.server.data._
+import bazooka.server.persistence._
 
 import com.google.inject._
 import com.wideplay.warp.persist._
 import javax.persistence._
+import java.lang.String
 
 class ShooterServiceImpl extends ShooterService {
 
@@ -18,49 +20,42 @@ class ShooterServiceImpl extends ShooterService {
   }
 
   @Transactional
-  def saveShooter(shooter: String, script: String) {
-    assumeShooterNotExists(shooter)
-
-    val data: ShooterData = new ShooterData(shooter)
-    data.script = script
-
-    repo.persist(data)
+  def saveShooter(shooter: Shooter) = {
+    assumeShooterNotExists(shooter.getName)
+    repo.persist(shooter)
+    shooter
   }
 
   @Transactional
-  def updateShooter(shooter: String, script: String) {
-    assumeShooterExists(shooter)
-    
-    val data = repo.getShooterByName(shooter)
-    data.script = script
-
-    repo.merge(data)
+  def updateShooter(shooter: Shooter) = {
+    assumeShooterExists(shooter.getName)
+    repo.merge(shooter)
+    shooter
   }
 
   @Transactional
-  def deleteShooter(shooter: String) {
-    assumeShooterExists(shooter)
+  def deleteShooter(shooter: Shooter) {
+    val name = shooter.getName
+    assumeShooterExists(name)
+    repo.remove(repo.getShooterByName(name))
+  }
 
-    val data = repo.getShooterByName(shooter)
-    repo.remove(data)
+  def getShooter(name: String) = {
+    assumeShooterExists(name)
+    repo.getShooterByName(name)
   }
 
   def listShooters() = {
     repo.listShooters
   }
 
-  def getScript(shooter: String) = {
-    assumeShooterExists(shooter)
-    repo.getScript(shooter)
-  }
-
-  private def assumeShooterNotExists(shooter: String) {
-    if (repo.shooterExists(shooter))
+  private def assumeShooterNotExists(name: String) {
+    if (repo.shooterExists(name))
       throw new ExistingShooterException
   }
 
-  private def assumeShooterExists(shooter: String) {
-    if (!repo.shooterExists(shooter))
+  private def assumeShooterExists(name: String) {
+    if (!repo.shooterExists(name))
       throw new NonExistingShooterException
   }
 }

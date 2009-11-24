@@ -2,6 +2,7 @@ package bazooka.common.service;
 
 import bazooka.common.exception.ExistingShooterException;
 import bazooka.common.exception.NonExistingShooterException;
+import bazooka.common.model.Shooter;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -10,13 +11,13 @@ import java.util.List;
 @RemoteServiceRelativePath("GWT.rpc")
 public interface ShooterService extends RemoteService {
 
-  void saveShooter(String request, String script) throws ExistingShooterException;
+  Shooter saveShooter(Shooter shooter) throws ExistingShooterException;
 
-  void updateShooter(String request, String script) throws NonExistingShooterException;
+  Shooter updateShooter(Shooter shooter) throws NonExistingShooterException;
 
-  String getScript(String shooter) throws NonExistingShooterException;
+  void deleteShooter(Shooter shooter) throws NonExistingShooterException;
 
-  void deleteShooter(String request) throws NonExistingShooterException;
+  Shooter getShooter(String name) throws NonExistingShooterException;
 
-  List<String> listShooters();
+  List<Shooter> listShooters();
 }

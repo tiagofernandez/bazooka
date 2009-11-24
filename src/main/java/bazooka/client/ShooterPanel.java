@@ -1,6 +1,7 @@
 package bazooka.client;
 
 import bazooka.common.exception.ExistingShooterException;
+import bazooka.common.model.Shooter;
 import bazooka.common.service.ShooterService;
 import bazooka.common.service.ShooterServiceAsync;
 import com.google.gwt.core.client.GWT;
@@ -24,7 +25,7 @@ public class ShooterPanel extends Composite {
   @UiField Button deleteButton;
   @UiField VerticalPanel shooterPanel;
 
-  private final Map<String, RadioButton> shooters = new HashMap<String, RadioButton>();
+  private final Map<Shooter, RadioButton> shooters = new HashMap<Shooter, RadioButton>();
   private final ShooterServiceAsync shooterService = GWT.create(ShooterService.class);
 
   private ConfigurationPanel configurationPanel;
@@ -36,7 +37,7 @@ public class ShooterPanel extends Composite {
   }
 
   @Override protected void onLoad() {
-    populateShooters();
+    populateShooterList();
     selectFirstShooter();
   }
 
@@ -44,13 +45,13 @@ public class ShooterPanel extends Composite {
   void onNewButtonClicked(ClickEvent event) {
     String newShooterName = askNewShooterName();
     if (newShooterName != null) {
-      saveShooter(newShooterName);
+      createNewShooter(newShooterName.trim(), "");
     }
   }
 
   @UiHandler("editButton")
   void onEditButtonClicked(ClickEvent event) {
-    contentPanel.getScript(getSelectedShooter());
+    contentPanel.setScript(getSelectedShooter().getScript());
     disableEditButton();
     enableDeleteButton();
     showScriptPanel();
@@ -58,55 +59,54 @@ public class ShooterPanel extends Composite {
 
   @UiHandler("deleteButton")
   void onDeleteButtonClicked(ClickEvent event) {
-    String shooterName = getSelectedShooter();
-    if (Window.confirm("Are you sure you want to delete '" + shooterName + "'?")) {
-      deleteShooter(shooterName);
+    Shooter shooter = getSelectedShooter();
+    if (Window.confirm("Are you sure you want to delete '" + shooter + "'?")) {
+      deleteExistingShooter(shooter, getSelectedShooterRadioButton());
     }
   }
 
-  void saveShooter(final String shooterName) {
-    AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+  void createNewShooter(final String name, final String script) {
+    final Shooter shooter = new Shooter(name, script);
+
+    shooterService.saveShooter(shooter, new AsyncCallback<Shooter>() {
       public void onFailure(Throwable caught) {
         if (caught instanceof ExistingShooterException)
           Window.alert("This name is already taken.");
         else
           Window.alert("Error while creating shooter: " + caught.getMessage());
       }
-      public void onSuccess(Void success) {
-        RadioButton newShooter = buildShooterRadioButton(shooterName);
-        newShooter.setValue(true);
-        addShooter(newShooter);
+      public void onSuccess(Shooter shooter) {
+        RadioButton shooterButton = buildShooterRadioButton(name);
+        shooterButton.setValue(true);
+        addShooter(shooter, shooterButton);
         onEditButtonClicked(null);
       }
-    };
-    shooterService.saveShooter(shooterName, "", callback);
+    });
   }
 
-  void deleteShooter(final String shooterName) {
-    AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+  void deleteExistingShooter(final Shooter shooter, final RadioButton shooterButton) {
+    shooterService.deleteShooter(shooter, new AsyncCallback<Void>() {
       public void onFailure(Throwable caught) {
         Window.alert("Error while deleting shooter: " + caught.getMessage());
       }
       public void onSuccess(Void success) {
-        removeShooter(getSelectedShooterRadioButton());
+        removeShooter(shooter, shooterButton);
         selectFirstShooter();
         showMessagePanel();
       }
-    };
-    shooterService.deleteShooter(shooterName, callback);
+    });
   }
 
-  void populateShooters() {
-    AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
+  void populateShooterList() {
+    shooterService.listShooters(new AsyncCallback<List<Shooter>>() {
       public void onFailure(Throwable caught) {
         Window.alert("Error while retrieving shooters: " + caught.getMessage());
       }
-      public void onSuccess(List<String> shooters) {
-        for (String shooter : shooters)
-          addShooter(buildShooterRadioButton(shooter));
+      public void onSuccess(List<Shooter> shooters) {
+        for (Shooter shooter : shooters)
+          addShooter(shooter, buildShooterRadioButton(shooter.getName()));
       }
-    };
-    shooterService.listShooters(callback);
+    });
   }
 
   void showScriptPanel() {
@@ -143,18 +143,6 @@ public class ShooterPanel extends Composite {
     this.contentPanel = contentPanel;
   }
 
-  boolean hasSelectedShooter() {
-    for (RadioButton shooter : shooters.values()) {
-      if (shooter.getValue())
-        return true;
-    }
-    return false;
-  }
-
-  String getSelectedShooter() {
-    return getSelectedShooterRadioButton().getText();
-  }
-
   private void selectFirstShooter() {
     if (hasAtLeastOneShooter()) {
       getFirstShooter().setValue(true);
@@ -175,22 +163,44 @@ public class ShooterPanel extends Composite {
     return (RadioButton) shooterPanel.getWidget(0);
   }
 
-  private void addShooter(RadioButton shooter) {
-    shooterPanel.add(shooter);
-    shooters.put(shooter.getText().trim(), shooter);
+  private void addShooter(Shooter shooter, RadioButton shooterButton) {
+    shooterPanel.add(shooterButton);
+    shooters.put(shooter, shooterButton);
   }
 
-  private void removeShooter(RadioButton shooter) {
-    shooterPanel.remove(shooter);
-    shooters.remove(shooter.getText().trim());
+  private void removeShooter(Shooter shooter, RadioButton button) {
+    shooterPanel.remove(button);
+    shooters.remove(shooter);
   }
 
   private boolean containsShooter(String name) {
-    for (String key : shooters.keySet()) {
-      if (key.trim().equalsIgnoreCase(name))
+    for (Shooter key : shooters.keySet()) {
+      if (name.equalsIgnoreCase(key.getName()))
         return true;
     }
     return false;
+  }
+
+  boolean hasSelectedShooter() {
+    for (RadioButton shooter : shooters.values()) {
+      if (shooter.getValue())
+        return true;
+    }
+    return false;
+  }
+
+  Shooter getSelectedShooter() {
+    final String selectedShooter = getSelectedShooterName();
+
+    for (Shooter shooter : shooters.keySet())
+      if (selectedShooter.equals(shooter.getName()))
+        return shooter;
+
+    throw new IllegalStateException("There is no shooter selected!");
+  }
+
+  String getSelectedShooterName() {
+    return getSelectedShooterRadioButton().getText();
   }
 
   private RadioButton getSelectedShooterRadioButton() {

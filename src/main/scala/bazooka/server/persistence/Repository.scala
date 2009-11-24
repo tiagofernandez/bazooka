@@ -1,4 +1,4 @@
-package bazooka.server.data
+package bazooka.server.persistence
 
 import com.google.inject._
 import javax.persistence._
