@@ -1,5 +1,7 @@
 package bazooka.client;
 
+import bazooka.common.model.Configuration;
+import bazooka.common.model.Parameter;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.*;
@@ -23,7 +25,7 @@ public class ConfigurationPanel extends Composite {
   @UiField Button removeParamButton;
   @UiField VerticalPanel parametersPanel;
 
-  private final Map<String, Map<String, String>> configurations = new HashMap<String, Map<String, String>>();
+  private final Map<String, Configuration> configurations = new HashMap<String, Configuration>();
 
   ConfigurationPanel() {
     initWidget(binder.createAndBindUi(this));
@@ -31,7 +33,6 @@ public class ConfigurationPanel extends Composite {
 
   @Override protected void onLoad() {
     populateConfigList();
-    populateDefaultParameters();
   }
 
   @UiHandler("configList")
@@ -94,22 +95,13 @@ public class ConfigurationPanel extends Composite {
 
   private void populateConfigList() {
     addConfig("Default");
-    addConfig("Foo");
-    addConfig("Bar");
-    addConfig("Baz");
-  }
-
-  private void populateDefaultParameters() {
-    for (int i = 1; i <= 10; i++) {
-      String key = "FOO" + i, value = "BAR" + i;
-      getSelectedParameters().put(key, value);
-      addParameter(key, value);
-    }
+//    getSelectedConfiguration().addProperty(new Property(key, value));
+//    addParameter(key, value);
   }
 
   private void reloadParameters() {
     clearParameters();
-    for (Map.Entry<String, String> param : getSelectedParameters().entrySet())
+    for (Parameter param : getSelectedConfiguration().getParameters())
       addParameter(param.getKey(), param.getValue());
   }
 
@@ -118,12 +110,12 @@ public class ConfigurationPanel extends Composite {
       HorizontalPanel entry = (HorizontalPanel) parametersPanel.getWidget(i);
       String key = getParameterKey(entry);
       String value = getParameterValue(entry);
-      getSelectedParameters().put(key, value);
+      getSelectedConfiguration().addParameter(new Parameter(key, value));
     }
   }
 
   private void refreshParameters() {
-    getSelectedParameters().clear();
+    getSelectedConfiguration().clearParameters();
 
     for (int i = parametersPanel.getWidgetCount() - 1; i >= 0 ; i--) {
       HorizontalPanel entry = (HorizontalPanel) parametersPanel.getWidget(i);
@@ -132,7 +124,7 @@ public class ConfigurationPanel extends Composite {
       if (mustDiscardParameter(key))
         removeParameter(entry);
       else
-        getSelectedParameters().put(key, getParameterValue(entry));
+        getSelectedConfiguration().addParameter(new Parameter(key, getParameterValue(entry)));
     }
   }
 
@@ -148,7 +140,7 @@ public class ConfigurationPanel extends Composite {
     parametersPanel.remove(entry);
   }
 
-  private Map<String, String> getSelectedParameters() {
+  private Configuration getSelectedConfiguration() {
     return configurations.get(getSelectedConfig());
   }
 
@@ -184,7 +176,7 @@ public class ConfigurationPanel extends Composite {
 
   private void addConfig(String name) {
     configList.addItem(name);
-    configurations.put(name, new HashMap<String, String>());
+    configurations.put(name, new Configuration());
   }
 
   private void removeSelectedConfig() {

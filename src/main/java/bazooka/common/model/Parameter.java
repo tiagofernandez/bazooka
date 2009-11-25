@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-public class Property implements Serializable {
+public class Parameter implements Serializable {
 
   @Id @GeneratedValue
   private Integer id;
@@ -18,11 +18,11 @@ public class Property implements Serializable {
   @ManyToOne
   private Configuration configuration;
 
-  public Property() {
+  public Parameter() {
     this(null, null);
   }
 
-  public Property(String key, String value) {
+  public Parameter(String key, String value) {
     this.key = key;
     this.value = value;
   }
@@ -60,9 +60,9 @@ public class Property implements Serializable {
   }
 
   @Override public boolean equals(Object obj) {
-    return obj instanceof Property
-      && this.key.equals(((Property) obj).key)
-      && this.value.equals(((Property) obj).value);
+    return obj instanceof Parameter
+      && this.key.equals(((Parameter) obj).key)
+      && this.value.equals(((Parameter) obj).value);
   }
 
   @Override public int hashCode() {

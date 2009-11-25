@@ -2,8 +2,7 @@ package bazooka.common.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class Configuration implements Serializable {
@@ -14,8 +13,9 @@ public class Configuration implements Serializable {
   @Column(unique = true)
   private String name;
 
+  @SuppressWarnings({"NonJREEmulationClassesInClientCode"})
   @OneToMany(cascade = CascadeType.ALL)
-  private List<Property> properties;
+  private List<Parameter> parameters;
 
   public Configuration() {
     this(null);
@@ -41,24 +41,35 @@ public class Configuration implements Serializable {
     this.name = name;
   }
 
-  public List<Property> getProperties() {
-    return properties;
+  public List<Parameter> getParameters() {
+    if (parameters != null)
+    Collections.sort(parameters, new Comparator<Parameter>() {
+      public int compare(Parameter p1, Parameter p2) {
+        return p1.getKey().compareTo(p2.getKey());
+      }
+    });
+    return parameters;
   }
 
-  public void setProperties(List<Property> properties) {
-    this.properties = properties;
+  public void setParameters(List<Parameter> parameters) {
+    this.parameters = parameters;
   }
 
-  public void addProperty(Property property) {
-    if (properties == null)
-      properties = new ArrayList<Property>();
+  public void addParameter(Parameter parameter) {
+    if (parameters == null)
+      parameters = new ArrayList<Parameter>();
 
-    properties.add(property);
+    parameters.add(parameter);
   }
 
-  public void removeProperty(Property property) {
-    if (properties != null)
-      properties.remove(property);
+  public void removeParameter(Parameter parameter) {
+    if (parameters != null)
+      parameters.remove(parameter);
+  }
+
+  public void clearParameters() {
+    if (parameters != null)
+      parameters.clear();
   }
 
   @Override public boolean equals(Object obj) {

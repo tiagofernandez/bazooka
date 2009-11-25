@@ -3,7 +3,7 @@ package bazooka.server.service
 import bazooka.common.exception.ExistingConfigurationException
 import bazooka.common.exception.NonExistingConfigurationException
 import bazooka.common.model.Configuration
-import bazooka.common.model.Property
+import bazooka.common.model.Parameter
 import bazooka.server.context.BazookaContext
 import bazooka.server.persistence.PersistenceModule
 
@@ -22,26 +22,26 @@ it "should not save configurations with the same name", {
 	}
 }
 
-it "should update the properties for an existing configuration", {
+it "should update the parameters for an existing configuration", {
   configuration = service.saveConfiguration(new Configuration("Pqr"))
-  properties = [new Property("xyz1", "abc1"), new Property("xyz2", "abc2")]
+  parameters = [new Parameter("xyz1", "abc1"), new Parameter("xyz2", "abc2")]
 
-  configuration.properties = properties
+  configuration.parameters = parameters
 
-  service.updateConfiguration(configuration).properties.each { property ->
-    properties.contains property
+  service.updateConfiguration(configuration).parameters.each { parameter ->
+    parameters.contains parameter
   }
 }
 
-it "should save a configuration and get its properties", {
+it "should save a configuration and get its parameters", {
   configuration = new Configuration("Yet Another Config")
-  properties = [new Property("foo1", "bar1"), new Property("foo2", "bar2")]
+  parameters = [new Parameter("foo1", "bar1"), new Parameter("foo2", "bar2")]
 
-  configuration.properties = properties
+  configuration.parameters = parameters
 
   service.saveConfiguration(configuration)
-  service.getConfiguration(name).properties.each { property ->
-    properties.contains property
+  service.getConfiguration(name).parameters.each { parameter ->
+    parameters.contains parameter
   }
 }
 
