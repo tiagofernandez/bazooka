@@ -21,6 +21,15 @@ it "should not save shooters with the same name", {
 	}
 }
 
+it "should update a script for an existing shooter", {
+  shooter = service.saveShooter(new Shooter("Xyz", "while (true) {}"))
+
+  newScript = "while (false) {}"
+  shooter.script = newScript
+
+  service.updateShooter(shooter).script.shouldBe newScript
+}
+
 it "should not save a script for a non-existing shooter", {
   ensureThrows(NonExistingShooterException) {
     service.updateShooter(new Shooter("Void", "println 'Some script'"))
@@ -41,7 +50,7 @@ it "should delete an existing shooter", {
   service.deleteShooter(shooter)
 
   ensureThrows(NonExistingShooterException) {
-    service.deleteShooter(new Shooter(name))
+    service.getShooter(name)
 	}
 }
 

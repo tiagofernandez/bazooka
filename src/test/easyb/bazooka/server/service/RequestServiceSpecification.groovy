@@ -21,6 +21,15 @@ it "should not save requests with the same name", {
 	}
 }
 
+it "should update a payload for an existing request", {
+  request = service.saveRequest(new Request("Abc", "<foo/>"))
+
+  newPayload = "<bar/>"
+  request.payload = newPayload
+
+  service.updateRequest(request).payload.shouldBe newPayload
+}
+
 it "should not save a payload for a non-existing request", {
   ensureThrows(NonExistingRequestException) {
     service.updateRequest(new Request("Null", "{ \"foo\": { \"bar\": \"baz\" } }"))
@@ -41,7 +50,7 @@ it "should delete an existing request", {
   service.deleteRequest(request)
 
   ensureThrows(NonExistingRequestException) {
-    service.deleteRequest(new Request(name))
+    service.getRequest(name)
 	}
 }
 
