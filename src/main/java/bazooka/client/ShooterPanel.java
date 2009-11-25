@@ -25,11 +25,11 @@ public class ShooterPanel extends Composite {
   @UiField Button deleteButton;
   @UiField VerticalPanel shooterPanel;
 
-  private final Map<Shooter, RadioButton> shooters = new HashMap<Shooter, RadioButton>();
   private final ShooterServiceAsync shooterService = GWT.create(ShooterService.class);
 
-  private ConfigurationPanel configurationPanel;
+  private final Map<Shooter, RadioButton> shooters = new HashMap<Shooter, RadioButton>();
 
+  private ConfigurationPanel configurationPanel;
   private ContentPanel contentPanel;
 
   ShooterPanel() {
@@ -44,9 +44,8 @@ public class ShooterPanel extends Composite {
   @UiHandler("newButton")
   void onNewButtonClicked(ClickEvent event) {
     String newShooterName = askNewShooterName();
-    if (newShooterName != null) {
+    if (newShooterName != null)
       createNewShooter(newShooterName.trim(), "");
-    }
   }
 
   @UiHandler("editButton")
