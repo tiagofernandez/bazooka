@@ -15,9 +15,7 @@ public class Shooter implements Serializable {
   @Lob
   private String script;
 
-  public Shooter() {
-    this(null);
-  }
+  public Shooter() {}
 
   public Shooter(String name) {
     this(name, null);

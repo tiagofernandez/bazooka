@@ -13,5 +13,6 @@ class BazookaServletModule extends ServletModule {
     // cannot use @ImplementedBy
     bind(classOf[ShooterService]).to(classOf[ShooterServiceImpl])
     bind(classOf[RequestService]).to(classOf[RequestServiceImpl])
+    bind(classOf[ConfigurationService]).to(classOf[ConfigurationServiceImpl])
   }
 }

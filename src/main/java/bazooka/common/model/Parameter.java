@@ -15,11 +15,11 @@ public class Parameter implements Serializable {
   @Column
   private String value;
 
-  @ManyToOne
-  private Configuration configuration;
+  public Parameter() {}
 
-  public Parameter() {
-    this(null, null);
+  public Parameter(Parameter param) {
+    this.key = param.key;
+    this.value = param.value;
   }
 
   public Parameter(String key, String value) {
@@ -49,14 +49,6 @@ public class Parameter implements Serializable {
 
   public void setValue(String value) {
     this.value = value;
-  }
-
-  public Configuration getConfiguration() {
-    return configuration;
-  }
-
-  public void setConfiguration(Configuration configuration) {
-    this.configuration = configuration;
   }
 
   @Override public boolean equals(Object obj) {

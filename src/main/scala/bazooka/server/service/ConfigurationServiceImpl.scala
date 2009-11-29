@@ -7,8 +7,10 @@ import bazooka.server.persistence._
 
 import com.google.inject._
 import com.wideplay.warp.persist._
+
 import javax.persistence._
-import java.lang.String
+
+import scala.collection.jcl.Conversions._
 
 class ConfigurationServiceImpl extends ConfigurationService {
 
@@ -23,14 +25,14 @@ class ConfigurationServiceImpl extends ConfigurationService {
   def saveConfiguration(configuration: Configuration) = {
     assumeConfigurationNotExists(configuration.getName)
     repo.persist(configuration)
-    configuration
+    new Configuration(configuration)
   }
 
   @Transactional
   def updateConfiguration(configuration: Configuration) = {
     assumeConfigurationExists(configuration.getName)
     repo.merge(configuration)
-    configuration
+    new Configuration(configuration)
   }
 
   @Transactional
@@ -42,11 +44,13 @@ class ConfigurationServiceImpl extends ConfigurationService {
 
   def getConfiguration(name: String) = {
     assumeConfigurationExists(name)
-    repo.getConfigurationByName(name)
+    new Configuration(repo.getConfigurationByName(name))
   }
 
   def listConfigurations() = {
-    repo.listConfigurations
+    val configs = repo.listConfigurations
+    convertList(configs).foreach(config => config.normalizeRelationships())
+    configs
   }
 
   private def assumeConfigurationNotExists(name: String) {

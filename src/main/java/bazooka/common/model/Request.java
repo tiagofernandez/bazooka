@@ -15,9 +15,7 @@ public class Request implements Serializable {
   @Lob
   private String payload;
 
-  public Request() {
-    this(null);
-  }
+  public Request() {}
 
   public Request(String name) {
     this(name, null);

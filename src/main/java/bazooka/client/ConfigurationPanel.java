@@ -2,14 +2,16 @@ package bazooka.client;
 
 import bazooka.common.model.Configuration;
 import bazooka.common.model.Parameter;
+import bazooka.common.service.ConfigurationService;
+import bazooka.common.service.ConfigurationServiceAsync;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ConfigurationPanel extends Composite {
 
@@ -19,11 +21,13 @@ public class ConfigurationPanel extends Composite {
 
   @UiField ListBox configList;
   @UiField Button saveButton;
+  @UiField Button saveAsButton;
   @UiField Button deleteButton;
-  @UiField Button cloneButton;
   @UiField Button addParamButton;
   @UiField Button removeParamButton;
   @UiField VerticalPanel parametersPanel;
+
+  private final ConfigurationServiceAsync configurationService = GWT.create(ConfigurationService.class);
 
   private final Map<String, Configuration> configurations = new HashMap<String, Configuration>();
 
@@ -40,7 +44,7 @@ public class ConfigurationPanel extends Composite {
     reloadParameters();
     disableSaveButton();
 
-    if (isFirstConfigSelected())
+    if (isConfigListEmpty())
       disableDeleteButton();
     else
       enableDeleteButton();
@@ -59,30 +63,21 @@ public class ConfigurationPanel extends Composite {
   @UiHandler("saveButton")
   void onSaveButtonClicked(ClickEvent event) {
     refreshParameters();
-    disableSaveButton();
+    updateConfiguration(getSelectedConfiguration());
+  }
+
+  @UiHandler("saveAsButton")
+  void onSaveAsButtonClicked(ClickEvent event) {
+    String newConfigName = askNewConfigName();
+    if (newConfigName != null) {
+      createConfiguration(new Configuration(newConfigName, getCurrentParameters()));
+    }
   }
 
   @UiHandler("deleteButton")
   void onDeleteButtonClicked(ClickEvent event) {
-    if (isFirstConfigSelected()) {
-      Window.alert("Cannot delete the default configuration.");
-    }
-    else if (Window.confirm("Are you sure you want to delete '" + getSelectedConfig() + "'?")) {
-      removeSelectedConfig();
-      selectFirstConfig();
-      reloadParameters();
-      disableDeleteButton();
-    }
-  }
-
-  @UiHandler("cloneButton")
-  void onCloneButtonClicked(ClickEvent event) {
-    String newConfigName = askNewConfigName();
-    if (newConfigName != null) {
-      addConfig(newConfigName);
-      selectLastConfig();
-      cloneParameters();
-      enableDeleteButton();
+    if (Window.confirm("Are you sure you want to delete '" + getSelectedConfig() + "'?")) {
+      deleteConfiguration(getSelectedConfiguration());
     }
   }
 
@@ -93,25 +88,63 @@ public class ConfigurationPanel extends Composite {
     enableSaveButton();
   }
 
+  private void createConfiguration(final Configuration configuration) {
+    configurationService.saveConfiguration(configuration, new AsyncCallback<Configuration>() {
+      public void onFailure(Throwable caught) {
+        Window.alert("Error while creating configuration: " + caught.getMessage());
+      }
+      public void onSuccess(Configuration configuration) {
+        addConfig(configuration);
+        selectLastConfig();
+      }
+    });
+  }
+
+  private void updateConfiguration(final Configuration configuration) {
+    configurationService.updateConfiguration(configuration, new AsyncCallback<Configuration>() {
+      public void onFailure(Throwable caught) {
+        Window.alert("Error while saving configuration: " + caught.getMessage());
+      }
+      public void onSuccess(Configuration configuration) {
+        configurations.put(configuration.getName(), configuration);
+        disableSaveButton();
+      }
+    });
+  }
+
+  private void deleteConfiguration(final Configuration configuration) {
+    configurationService.deleteConfiguration(configuration, new AsyncCallback<Void>() {
+      public void onFailure(Throwable caught) {
+        Window.alert("Error while deleting configuration: " + caught.getMessage());
+      }
+      public void onSuccess(Void success) {
+        removeSelectedConfig();
+        selectFirstConfig();
+        reloadParameters();
+      }
+    });
+  }
+
   private void populateConfigList() {
-    addConfig("Default");
-//    getSelectedConfiguration().addProperty(new Property(key, value));
-//    addParameter(key, value);
+    configurationService.listConfigurations(new AsyncCallback<List<Configuration>>() {
+      public void onFailure(Throwable caught) {
+        Window.alert("Error while retrieving configurations: " + caught.getMessage());
+      }
+      public void onSuccess(List<Configuration> configurations) {
+        for (Configuration config : configurations)
+          addConfig(config);
+        
+        reloadParameters();
+      }
+    });
   }
 
   private void reloadParameters() {
     clearParameters();
-    for (Parameter param : getSelectedConfiguration().getParameters())
-      addParameter(param.getKey(), param.getValue());
-  }
 
-  private void cloneParameters() {
-    for (int i = 0; i < parametersPanel.getWidgetCount(); i++) {
-      HorizontalPanel entry = (HorizontalPanel) parametersPanel.getWidget(i);
-      String key = getParameterKey(entry);
-      String value = getParameterValue(entry);
-      getSelectedConfiguration().addParameter(new Parameter(key, value));
-    }
+    if (!isConfigListEmpty())
+      for (Parameter param : getSelectedParameters())
+        addParameter(param.getKey(), param.getValue());
   }
 
   private void refreshParameters() {
@@ -144,6 +177,20 @@ public class ConfigurationPanel extends Composite {
     return configurations.get(getSelectedConfig());
   }
 
+  private List<Parameter> getSelectedParameters() {
+    return getSelectedConfiguration().getParameters();
+  }
+
+  private List<Parameter> getCurrentParameters() {
+    List<Parameter> parameters = new ArrayList<Parameter>();
+
+    for (int i = 0; i < parametersPanel.getWidgetCount(); i++) {
+      HorizontalPanel entry = (HorizontalPanel) parametersPanel.getWidget(i);
+      parameters.add(new Parameter(getParameterKey(entry), getParameterValue(entry)));
+    }
+    return parameters;
+  }
+  
   private String getParameterKey(HorizontalPanel entry) {
     TextBox key = (TextBox) entry.getWidget(0);
     return key.getText();
@@ -159,7 +206,8 @@ public class ConfigurationPanel extends Composite {
   }
 
   private void enableSaveButton() {
-    saveButton.setEnabled(true);
+    if (!isConfigListEmpty())
+      saveButton.setEnabled(true);
   }
 
   private void disableSaveButton() {
@@ -174,9 +222,9 @@ public class ConfigurationPanel extends Composite {
     deleteButton.setEnabled(false);
   }
 
-  private void addConfig(String name) {
-    configList.addItem(name);
-    configurations.put(name, new Configuration());
+  private void addConfig(Configuration configuration) {
+    configList.addItem(configuration.getName());
+    configurations.put(configuration.getName(), configuration);
   }
 
   private void removeSelectedConfig() {
@@ -197,11 +245,13 @@ public class ConfigurationPanel extends Composite {
   }
 
   private void selectFirstConfig() {
-    configList.setSelectedIndex(0);
-  }
-
-  private boolean isFirstConfigSelected() {
-    return configList.getSelectedIndex() == 0;
+    if (isConfigListEmpty()) {
+      disableDeleteButton();
+    }
+    else {
+      enableDeleteButton();
+      configList.setSelectedIndex(0);
+    }
   }
 
   private void selectLastConfig() {
@@ -209,14 +259,33 @@ public class ConfigurationPanel extends Composite {
     configList.setSelectedIndex(lastIndex);
   }
 
+  private boolean isConfigListEmpty() {
+    return configList.getItemCount() == 0;
+  }
+
   private HorizontalPanel buildParameterEntry(String key, String value) {
     HorizontalPanel entry = new HorizontalPanel();
     entry.setSpacing(5);
-    entry.add(buildParameterTextBox(key));
+    entry.add(buildParameterKeyTextBox(key));
     entry.add(buildEqualsLabel());
-    entry.add(buildParameterTextBox(value));
+    entry.add(buildParameterValueTextBox(value));
     entry.add(buildRemoveParameterButton(entry));
     return entry;
+  }
+
+  private TextBox buildParameterKeyTextBox(String key) {
+    return buildParameterTextBox(key);
+  }
+
+  private TextBox buildParameterValueTextBox(String key) {
+    TextBox valueBox = buildParameterTextBox(key);
+    valueBox.addKeyPressHandler(new KeyPressHandler() {
+      public void onKeyPress(KeyPressEvent event) {
+        if (event.getCharCode() == 9) // horizontal tab
+          onAddParamClicked(null);
+      }
+    });
+    return valueBox;
   }
 
   private TextBox buildParameterTextBox(String text) {
@@ -238,7 +307,7 @@ public class ConfigurationPanel extends Composite {
     return label;
   }
 
-  private Widget buildRemoveParameterButton(final HorizontalPanel entry) {
+  private Button buildRemoveParameterButton(final HorizontalPanel entry) {
     Button remButton = new Button();
     remButton.setStyleName(removeParamButton.getStyleName());
     remButton.setHTML(removeParamButton.getHTML());

@@ -22,37 +22,42 @@ it "should not save configurations with the same name", {
 	}
 }
 
-it "should update the parameters for an existing configuration", {
-  configuration = service.saveConfiguration(new Configuration("Pqr"))
-  parameters = [new Parameter("xyz1", "abc1"), new Parameter("xyz2", "abc2")]
+it "should save a configuration and get its parameters", {
+  configuration = new Configuration("Yet Another Config", [new Parameter("foo1", "bar1"), new Parameter("foo2", "bar2")])
 
-  configuration.parameters = parameters
-
-  service.updateConfiguration(configuration).parameters.each { parameter ->
-    parameters.contains parameter
+  service.saveConfiguration(configuration)
+  service.getConfiguration(configuration.name).parameters.each { param ->
+    configuration.parameters.contains param
   }
 }
 
-it "should save a configuration and get its parameters", {
-  configuration = new Configuration("Yet Another Config")
-  parameters = [new Parameter("foo1", "bar1"), new Parameter("foo2", "bar2")]
-
-  configuration.parameters = parameters
-
+it "should update the parameters of an existing configuration", {
+  configuration = new Configuration("Pqr", [new Parameter("xyz1", "abc1"), new Parameter("xyz2", "abc2")])
   service.saveConfiguration(configuration)
-  service.getConfiguration(name).parameters.each { parameter ->
-    parameters.contains parameter
+
+  configuration.parameters << new Parameter("xyz3", "abc3")
+  service.updateConfiguration(configuration)
+
+  service.getConfiguration(configuration.name).parameters.each { param ->
+    configuration.parameters.contains param
   }
+}
+
+it "should clone an existing configuration", {
+  configuration = new Configuration("Original", [new Parameter("abc1", "xyz1"), new Parameter("abc2", "xyz2")])
+  configToClone = new Configuration("Clone", configuration.parameters)
+
+  service.saveConfiguration(configToClone).id.shouldNotBe(configuration.id)
 }
 
 it "should delete an existing configuration", {
   name = "Special Config"
-  configuration = service.saveConfiguration(new Configuration(name))
+  configuration = new Configuration(name)
+  
+  service.saveConfiguration(configuration)
   service.deleteConfiguration(configuration)
 
-  ensureThrows(NonExistingConfigurationException) {
-    service.getConfiguration(name)
-	}
+  ensureThrows(NonExistingConfigurationException) { service.getConfiguration(name) }
 }
 
 it "should not delete a configuration that does not exist", {

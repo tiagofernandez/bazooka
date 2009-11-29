@@ -19,6 +19,10 @@ trait Repository {
     em.get.remove(entity)
   }
 
+  def refresh(relationship: Any) {
+    em.get.refresh(relationship)
+  }
+
   def getResultList(query: String) = {
     em.get
       .createQuery(query)
@@ -34,4 +38,5 @@ trait Repository {
     }
     queryToRun.getSingleResult
   }
+  
 }
