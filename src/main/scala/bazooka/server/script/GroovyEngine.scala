@@ -19,8 +19,10 @@ class GroovyEngine(manager: ScriptEngineManager, timeoutInSec: Int) {
       compiledScripts.put(script, compiledScript)
     }
     catch {
-      case ex: Throwable =>
-        throw new GroovyEngineException(getErrorMessage("Error while compiling script", script, ex), ex)
+      case ex: Throwable => {
+        val errorMessage = getErrorMessage("Error while compiling script", script, ex)
+        throw new GroovyEngineException(errorMessage, ex)
+      }
     }
   }
 
@@ -44,7 +46,8 @@ class GroovyEngine(manager: ScriptEngineManager, timeoutInSec: Int) {
     catch {
       case ex: Throwable => {
         task.cancel(true)
-        throw new GroovyEngineException(getErrorMessage("Error while evaluating script", script, ex), ex)
+        val errorMessage = getErrorMessage("Error while evaluating script", script, ex)
+        throw new GroovyEngineException(errorMessage, ex)
       }
     }
     finally {

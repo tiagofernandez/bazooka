@@ -64,7 +64,7 @@ class ShooterServiceImpl extends ShooterService {
       GroovyEngineManager.get.compileAndEval(script).toString
     }
     catch {
-      case ex => throw new ShootingException(ex)
+      case ex => throw new ShootingException(ex.getMessage, ex)
     }
   }
 

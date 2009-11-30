@@ -77,3 +77,20 @@ it "should take a successful shot", {
 
   service.shoot(shooter, request, config).shouldBe "Output: 8.0"
 }
+
+it "should show proper error messages after taking a failed shot", {
+  shooter = new Shooter("Subtracter", """\
+  result = first.toDouble() - second.toDouble()
+  request + result
+  """)
+
+  request = new Request("Output Prefix", "Output: ")
+  config = new Configuration("Numbers")
+
+  try {
+    service.shoot(shooter, request, config)
+  }
+  catch(ex) {
+    ensure(ex.message.indexOf("No such property: first for class") > 0) { isTrue }
+  }
+}

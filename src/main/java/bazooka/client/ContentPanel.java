@@ -89,6 +89,7 @@ public class ContentPanel extends Composite {
     if (shooterPanel.hasSelectedShooter()) {
       selectDefaultRequestIfChanged();
       loadingImage.setVisible(true);
+
       shoot(shooterPanel.getSelectedShooter(), getCurrentRequest(),
         configurationPanel.getCurrentConfiguration());
     }
