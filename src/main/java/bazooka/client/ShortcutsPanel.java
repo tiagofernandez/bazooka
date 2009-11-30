@@ -30,4 +30,8 @@ public class ShortcutsPanel extends LayoutComposite {
   ShooterPanel getShooterPanel() {
     return shooterPanel;
   }
+
+  ConfigurationPanel getConfigurationPanel() {
+    return configurationPanel;
+  }
 }

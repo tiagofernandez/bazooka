@@ -2,9 +2,9 @@ package bazooka.server.service
 
 import bazooka.common.exception.ExistingShooterException
 import bazooka.common.exception.NonExistingShooterException
-import bazooka.common.model.Shooter
 import bazooka.server.context.BazookaContext
 import bazooka.server.persistence.PersistenceModule
+import bazooka.common.model.*
 
 service = new BazookaContext(new PersistenceModule("bazooka-test")).injector.getInstance(ShooterServiceImpl.class)
 
@@ -64,4 +64,16 @@ it "should list the existing shooters", {
   service.saveShooter(new Shooter("Foo"))
   service.saveShooter(new Shooter("Bar"))
   service.listShooters().size().shouldBeGreaterThan 2
+}
+
+it "should take a successful shot", {
+  shooter = new Shooter("Multiplier", """\
+  result = first.toDouble() * second.toDouble()
+  request + result
+  """)
+
+  request = new Request("Output Prefix", "Output: ")
+  config = new Configuration("Numbers", [new Parameter("first", "2"), new Parameter("second", "4")])
+
+  service.shoot(shooter, request, config).shouldBe "Output: 8.0"
 }

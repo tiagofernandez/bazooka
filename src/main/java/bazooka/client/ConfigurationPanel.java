@@ -181,6 +181,17 @@ public class ConfigurationPanel extends Composite {
     return getSelectedConfiguration().getParameters();
   }
 
+  Configuration getCurrentConfiguration() {
+    if (isConfigListEmpty()) {
+      return new Configuration("None", getCurrentParameters());
+    }
+    else {
+      Configuration config = getSelectedConfiguration();
+      config.setParameters(getCurrentParameters());
+      return config;
+    }
+  }
+
   private List<Parameter> getCurrentParameters() {
     List<Parameter> parameters = new ArrayList<Parameter>();
 

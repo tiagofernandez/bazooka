@@ -4,11 +4,14 @@ import bazooka.common.exception._
 import bazooka.common.model._
 import bazooka.common.service._
 import bazooka.server.persistence._
+import bazooka.server.script._
 
 import com.google.inject._
 import com.wideplay.warp.persist._
+
 import javax.persistence._
-import java.lang.String
+
+import scala.collection.jcl.Conversions._
 
 class ShooterServiceImpl extends ShooterService {
 
@@ -47,6 +50,22 @@ class ShooterServiceImpl extends ShooterService {
 
   def listShooters() = {
     repo.listShooters
+  }
+
+  def shoot(shooter: Shooter, request: Request, config: Configuration) = {
+    val script = new GroovyScript(shooter.getName + " : " + request.getName, shooter.getScript)
+    script.parameters.put("request", request.getPayload)
+
+    convertList(config.getParameters).foreach ( param =>
+      script.parameters.put(param.getKey, param.getValue)
+    )
+
+    try {
+      GroovyEngineManager.get.compileAndEval(script).toString
+    }
+    catch {
+      case ex => throw new ShootingException(ex)
+    }
   }
 
   private def assumeShooterNotExists(name: String) {

@@ -2,8 +2,7 @@ package bazooka.client;
 
 import bazooka.common.exception.ExistingRequestException;
 import bazooka.common.exception.NonExistingShooterException;
-import bazooka.common.model.Request;
-import bazooka.common.model.Shooter;
+import bazooka.common.model.*;
 import bazooka.common.service.*;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -46,6 +45,7 @@ public class ContentPanel extends Composite {
   private final Map<String, Request> requests = new HashMap<String, Request>();
 
   private ShooterPanel shooterPanel;
+  private ConfigurationPanel configurationPanel;
 
   ContentPanel() {
     initWidget(binder.createAndBindUi(this));
@@ -87,7 +87,8 @@ public class ContentPanel extends Composite {
   void onShootButtonClicked(ClickEvent event) {
     if (shooterPanel.hasSelectedShooter()) {
       selectDefaultRequestIfChanged();
-      responseTextArea.setValue("BOOM!");
+      shoot(shooterPanel.getSelectedShooter(), getCurrentRequest(),
+        configurationPanel.getCurrentConfiguration());
     }
     else
       Window.alert("Please select a shooter.");
@@ -149,7 +150,6 @@ public class ContentPanel extends Composite {
   }
 
   void deleteExistingRequest(final Request request) {
-
     requestService.deleteRequest(request, new AsyncCallback<Void>() {
       public void onFailure(Throwable caught) {
         Window.alert("Error while deleting request: " + caught.getMessage());
@@ -157,6 +157,17 @@ public class ContentPanel extends Composite {
       public void onSuccess(Void success) {
         removeSelectedRequest();
         disableDeleteRequestButton();
+      }
+    });
+  }
+
+  void shoot(final Shooter shooter, final Request request, final Configuration config) {
+    shooterService.shoot(shooter, request, config, new AsyncCallback<String>() {
+      public void onFailure(Throwable caught) {
+        responseTextArea.setValue(caught.getMessage());
+      }
+      public void onSuccess(String result) {
+        responseTextArea.setValue(result);
       }
     });
   }
@@ -193,6 +204,10 @@ public class ContentPanel extends Composite {
 
   void setShooterPanel(ShooterPanel shooterPanel) {
     this.shooterPanel = shooterPanel;
+  }
+
+  void setConfigurationPanel(ConfigurationPanel configurationPanel) {
+    this.configurationPanel = configurationPanel;
   }
 
   void setScript(String script) {
@@ -254,6 +269,11 @@ public class ContentPanel extends Composite {
         return true;
     }
     return false;
+  }
+
+  private Request getCurrentRequest() {
+    return getSelectedRequestIndex() > 0 ?
+      getSelectedRequest() : new Request("Default", requestTextArea.getText());
   }
 
   private Request getSelectedRequest() {

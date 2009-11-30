@@ -1,6 +1,6 @@
 package bazooka.common.service;
 
-import bazooka.common.model.Shooter;
+import bazooka.common.model.*;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import java.util.List;
@@ -16,4 +16,6 @@ public interface ShooterServiceAsync {
   void getShooter(String name, AsyncCallback<Shooter> async);
 
   void listShooters(AsyncCallback<List<Shooter>> async);
+
+  void shoot(Shooter shooter, Request request, Configuration config, AsyncCallback<String> async);
 }

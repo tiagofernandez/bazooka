@@ -31,5 +31,6 @@ public class BazookaEntryPoint implements EntryPoint {
   private void wireUiComponents() {
     shortcutsPanel.setContentPanel(contentPanel);
     contentPanel.setShooterPanel(shortcutsPanel.getShooterPanel());
+    contentPanel.setConfigurationPanel(shortcutsPanel.getConfigurationPanel());
   }
 }
