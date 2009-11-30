@@ -56,9 +56,9 @@ class ShooterServiceImpl extends ShooterService {
     val script = new GroovyScript(shooter.getName + " : " + request.getName, shooter.getScript)
     script.parameters.put("request", request.getPayload)
 
-    convertList(config.getParameters).foreach ( param =>
-      script.parameters.put(param.getKey, param.getValue)
-    )
+    if (config.hasParameters())
+      convertList(config.getParameters).foreach ( param =>
+        script.parameters.put(param.getKey, param.getValue))
 
     try {
       GroovyEngineManager.get.compileAndEval(script).toString

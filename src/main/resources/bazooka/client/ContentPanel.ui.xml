@@ -28,6 +28,7 @@
         <div style="padding-top: 0.8em;">
           <g:Button ui:field="saveRequestAsButton">Save as</g:Button>
           <g:Button ui:field="shootButton">Take a shot</g:Button>
+          <g:Image ui:field="loadingImage" url="images/loading.gif" styleName="{style.image}" width="16" height="16" visible="false"/>
         </div>
         <div style="padding-top: 1.8em;"><b>Response:</b></div>
         <div class="{style.textWrapper}" ui:field="responseTextAreaDiv"/>

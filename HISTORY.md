@@ -1,9 +1,8 @@
-## 1.0 (work in progress)
+## 1.0 (2009-11-30)
 
+* Integrated a Groovy engine in order to compile and evaluate scripts
 * Designed the backend with Scala, Guice and JPA/Hibernate/H2
 * Improved the web interface (mostly CSS enhancements)
-* Bugfix: Switching requests using only the keyboard fails
-* Bugfix: Switching configurations using only the keyboard fails
 
 ## 0.9 (2009-11-01)
 

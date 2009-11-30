@@ -32,6 +32,7 @@ public class ContentPanel extends Composite {
   @UiField Button deleteRequestButton;
   @UiField Button saveRequestAsButton;
   @UiField Button shootButton;
+  @UiField Image loadingImage;
   @UiField DivElement requestTextAreaDiv;
   @UiField DivElement responseTextAreaDiv;
 
@@ -87,6 +88,7 @@ public class ContentPanel extends Composite {
   void onShootButtonClicked(ClickEvent event) {
     if (shooterPanel.hasSelectedShooter()) {
       selectDefaultRequestIfChanged();
+      loadingImage.setVisible(true);
       shoot(shooterPanel.getSelectedShooter(), getCurrentRequest(),
         configurationPanel.getCurrentConfiguration());
     }
@@ -165,9 +167,11 @@ public class ContentPanel extends Composite {
     shooterService.shoot(shooter, request, config, new AsyncCallback<String>() {
       public void onFailure(Throwable caught) {
         responseTextArea.setValue(caught.getMessage());
+        loadingImage.setVisible(false);
       }
       public void onSuccess(String result) {
         responseTextArea.setValue(result);
+        loadingImage.setVisible(false);
       }
     });
   }

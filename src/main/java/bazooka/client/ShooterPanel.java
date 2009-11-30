@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.*;
 
 import java.util.*;
 
-public class ShooterPanel extends Composite {
+public class ShooterPanel extends ResizeComposite {
 
   interface Binder extends UiBinder<Widget, ShooterPanel> {}
 

@@ -3,11 +3,11 @@ package bazooka.server.script
 import javax.script._
 import java.util.concurrent._
 
-class GroovyEngine(manager: ScriptEngineManager) {
+class GroovyEngine(manager: ScriptEngineManager, timeoutInSec: Int) {
 
   var engine: ScriptEngine = manager.getEngineByName("groovy")
 
-  var timeoutInSeconds: Int = 0
+  var timeoutInSeconds: Int = timeoutInSec
 
   val compiledScripts = new ConcurrentHashMap[GroovyScript, CompiledScript]
 

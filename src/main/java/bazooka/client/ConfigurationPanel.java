@@ -292,7 +292,7 @@ public class ConfigurationPanel extends Composite {
     TextBox valueBox = buildParameterTextBox(key);
     valueBox.addKeyPressHandler(new KeyPressHandler() {
       public void onKeyPress(KeyPressEvent event) {
-        if (event.getCharCode() == 9) // horizontal tab
+        if (KeyCodes.KEY_TAB == event.getCharCode())
           onAddParamClicked(null);
       }
     });

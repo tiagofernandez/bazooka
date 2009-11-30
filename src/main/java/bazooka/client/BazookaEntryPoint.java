@@ -25,7 +25,7 @@ public class BazookaEntryPoint implements EntryPoint {
   private void loadRootPanel() {
     RootLayoutPanel root = RootLayoutPanel.get();
     root.add(binder.createAndBindUi(this));
-    root.layout();
+    root.forceLayout();
   }
 
   private void wireUiComponents() {

@@ -19,12 +19,15 @@ public class AboutDialog extends DialogBox {
   AboutDialog() {
     setText("Bazooka");
     setWidget(binder.createAndBindUi(this));
+    setAnimationEnabled(true);
+    setGlassEnabled(true);
   }
 
   @Override protected void onPreviewNativeEvent(NativePreviewEvent preview) {
     super.onPreviewNativeEvent(preview);
     NativeEvent evt = preview.getNativeEvent();
-    if (isEventTypeKeydown(evt.getType()))
+    
+    if ("keydown".equals(evt.getType()))
       switch (evt.getKeyCode()) {
         case KeyCodes.KEY_ENTER:
         case KeyCodes.KEY_ESCAPE:
@@ -36,9 +39,5 @@ public class AboutDialog extends DialogBox {
   @UiHandler("closeButton")
   void onCloseButtonClicked(ClickEvent event) {
     hide();
-  }
-
-  private boolean isEventTypeKeydown(String type) {
-    return "keydown".equals(type);
   }
 }

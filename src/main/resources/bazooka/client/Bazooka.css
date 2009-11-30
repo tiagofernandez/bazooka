@@ -24,12 +24,6 @@ a:visited {
   cursor: pointer;
 }
 
-.aboutText {
-  width: 200px;
-  padding: 10px;
-  text-align: left;
-}
-
 .banner {
   margin-left: 10px;
   margin-top: 22px;
@@ -38,6 +32,11 @@ a:visited {
 
 .content {
   width: 99.5%;
+}
+
+.image {
+  border: 0;
+  background: transparent;
 }
 
 .logo {
@@ -66,12 +65,13 @@ a:visited {
 
 .stackHeader {
   background: #c1eec8 url(images/gradient.png) repeat-x 0px -1px;
-  cursor: pointer;
-  padding-top: 1em;
-  font-weight: bold;
-  text-align: center;
-  border-top: 1px solid #666;
   border-bottom: 1px solid #666;
+  border-top: 1px solid #666;
+  cursor: pointer;
+  font-weight: bold;
+  height: 1.88em;
+  padding-top: 1em;
+  text-align: center;
 }
 
 .textWrapper {

@@ -1,21 +1,38 @@
-<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-  xmlns:g='urn:import:com.google.gwt.user.client.ui'
-  xmlns:bazooka='urn:import:bazooka.client'>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+  xmlns:g="urn:import:com.google.gwt.user.client.ui"
+  xmlns:bazooka="urn:import:bazooka.client">
 
-  <ui:style src="Bazooka.css"/>
+  <ui:style>
+  .buttons {
+    text-align: right;
+  }
 
-  <g:DockPanel>
+  .panel {
+    padding: 10px;
+ 	}
+  
+  .text {
+    padding-top: 10px;
+    text-align: left;
+  }
+  </ui:style>
 
-    <g:Dock direction="CENTER">
-      <g:HTML styleName="{style.aboutText}">
-        Written by Tiago Fernandez: http://tiagofernandez.blogspot.com
-      </g:HTML>
-    </g:Dock>
-
-    <g:Dock direction="SOUTH">
+  <g:HTMLPanel width="24em" styleName="{style.panel}">
+    <div class="{style.text}">
+      Bazooka is a generic shooter web application built with
+      Google Web Toolkit 2.0 and Guice 2.0.
+    </div>
+    <div class="{style.text}">
+      The back-end uses the Java Persistence API with Hibernate
+      as concrete implementation targeting an H2 database, and
+      Groovy 1.6.5 is utilized as scripting engine.
+    </div>
+    <div class="{style.text}">
+      Written by Tiago Fernandez (2009).
+    </div>
+    <div class="{style.buttons}">
       <g:Button text="Close" ui:field="closeButton" />
-    </g:Dock>
-
-  </g:DockPanel>
+    </div>
+  </g:HTMLPanel>
 
 </ui:UiBinder>
