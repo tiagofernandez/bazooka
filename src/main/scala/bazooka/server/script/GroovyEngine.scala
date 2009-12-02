@@ -3,11 +3,11 @@ package bazooka.server.script
 import javax.script._
 import java.util.concurrent._
 
-class GroovyEngine(manager: ScriptEngineManager, timeoutInSec: Int) {
+object GroovyEngine {
 
-  var engine: ScriptEngine = manager.getEngineByName("groovy")
+  var engine: ScriptEngine = new ScriptEngineManager().getEngineByName("groovy")
 
-  var timeoutInSeconds: Int = timeoutInSec
+  var timeoutInSeconds: Int = 15
 
   val compiledScripts = new ConcurrentHashMap[GroovyScript, CompiledScript]
 
@@ -15,8 +15,10 @@ class GroovyEngine(manager: ScriptEngineManager, timeoutInSec: Int) {
     ensureScriptIsValid(script)
 
     try {
-      val compiledScript = engine.asInstanceOf[Compilable].compile(script.code)
-      compiledScripts.put(script, compiledScript)
+      if (!isScriptCompiled(script)) {
+        val compiledScript = engine.asInstanceOf[Compilable].compile(script.code)
+        compiledScripts.put(script, compiledScript)
+      }
     }
     catch {
       case ex: Throwable => {
@@ -55,35 +57,59 @@ class GroovyEngine(manager: ScriptEngineManager, timeoutInSec: Int) {
     }
   }
 
+  private def isScriptCompiled(script: GroovyScript) = compiledScripts.containsKey(script)
+
+  private def isScriptNotCompiled(script: GroovyScript) = !isScriptCompiled(script)
+
   private def createCallable(script: GroovyScript) = {
     val bindings = script.createBindings
 
-    if (compiledScripts.containsKey(script))
-      createCompilableCallable(compiledScripts.get(script), bindings)
+    if (isScriptCompiled(script))
+      createCompilableCallable(compiledScripts.get(script), script)
     else
-      createInterpretableCallable(script.code, bindings)
+      createInterpretableCallable(script)
   }
 
-  private def createCompilableCallable(script: CompiledScript, bindings: Bindings) = {
+  private def createCompilableCallable(compiledScript: CompiledScript, script: GroovyScript) = {
     new Callable[Object] {
       def call() = {
-        setEngineBindings(bindings)
-        script.eval()
+        try {
+          createScriptContext(script)
+          compiledScript.eval()
+        }
+        finally {
+          destroyScriptContext
+        }
       }
     }
   }
 
-  private def createInterpretableCallable(script: String, bindings: Bindings) = {
+  private def createInterpretableCallable(script: GroovyScript) = {
     new Callable[Object]() {
       def call() = {
-        setEngineBindings(bindings)
-        engine.eval(script)
+        try {
+          createScriptContext(script)
+          engine.eval(script.code)
+        }
+        finally {
+          destroyScriptContext
+        }
       }
     }
   }
 
-  private def setEngineBindings(bindings: Bindings) {
-    engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE)
+  private def createScriptContext(script: GroovyScript) {
+    val bindings = script.createBindings()
+    bindings.put(ScriptEngine.FILENAME, script.name)
+
+    val context = new SimpleScriptContext
+    context.setBindings(bindings, ScriptContext.ENGINE_SCOPE)
+
+    engine.setContext(context)
+  }
+
+  private def destroyScriptContext() {
+    engine.getContext.getBindings(ScriptContext.ENGINE_SCOPE).clear()
   }
 
   private def ensureScriptIsValid(script: GroovyScript) {

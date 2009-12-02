@@ -50,6 +50,12 @@ Bound variables
 PS: Additionally, each parameter is individually put as binding variables.
 
 
+Tips
+------
+
+XML formatting: bazooka.server.util.XmlFormatter.format '<foo><bar>abc</bar></foo>'
+
+
 Author
 ------
 
