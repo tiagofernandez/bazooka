@@ -11,7 +11,6 @@ import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import com.gwtext.client.core.EventCallback;
 import com.gwtext.client.widgets.form.TextArea;
 
 import java.util.*;
@@ -30,6 +29,7 @@ public class ContentPanel extends Composite {
 
   @UiField ListBox requestList;
   @UiField Button deleteRequestButton;
+  @UiField Button saveRequestButton;
   @UiField Button saveRequestAsButton;
   @UiField Button shootButton;
   @UiField Image loadingImage;
@@ -68,6 +68,14 @@ public class ContentPanel extends Composite {
     scriptTextArea.setValue(shooterPanel.getSelectedShooter().getScript());
   }
 
+  @UiHandler("saveRequestButton")
+  void onSaveRequestButtonClicked(ClickEvent event) {
+    if (isFirstRequestSelected())
+      onSaveRequestAsButtonClicked(event);
+    else
+      updateExistingRequest(getCurrentPayload());
+  }
+
   @UiHandler("saveRequestAsButton")
   void onSaveRequestAsButtonClicked(ClickEvent event) {
     String newRequestName = askNewRequestName();
@@ -77,17 +85,13 @@ public class ContentPanel extends Composite {
 
   @UiHandler("deleteRequestButton")
   void onDeleteRequestButtonClicked(ClickEvent event) {
-    String selectedRequest = getSelectedRequestName();
-    boolean validRequest = !"".equals(selectedRequest);
-    if (validRequest && Window.confirm("Are you sure you want to delete '" + selectedRequest + "'?")) {
+    if (!isFirstRequestSelected() && Window.confirm("Are you sure you want to delete '" + getSelectedRequestName() + "'?"))
       deleteExistingRequest(getSelectedRequest());
-    }
   }
 
   @UiHandler("shootButton")
   void onShootButtonClicked(ClickEvent event) {
     if (shooterPanel.hasSelectedShooter()) {
-      selectDefaultRequestIfChanged();
       loadingImage.setVisible(true);
 
       shoot(shooterPanel.getSelectedShooter(), getCurrentRequest(),
@@ -99,11 +103,7 @@ public class ContentPanel extends Composite {
 
   @UiHandler("requestList")
   void onRequestListChanged(ChangeEvent event) {
-    requestTextArea.setValue(getSelectedRequestPayload());
-    if (getSelectedRequestIndex() == 0)
-      disableDeleteRequestButton();
-    else
-      enableDeleteRequestButton();
+    requestTextArea.setValue(getSelectedPayload());
   }
 
   @UiHandler("requestList")
@@ -147,7 +147,20 @@ public class ContentPanel extends Composite {
       public void onSuccess(Request request) {
         addRequest(request);
         selectLastRequest();
-        enableDeleteRequestButton();
+      }
+    });
+  }
+
+  void updateExistingRequest(final String payload) {
+    final Request request = getSelectedRequest();
+    request.setPayload(payload);
+
+    requestService.updateRequest(request, new AsyncCallback<Request>() {
+      public void onFailure(Throwable caught) {
+        Window.alert("Error while updating request: " + caught.getMessage());
+      }
+      public void onSuccess(Request request) {
+        requests.put(request.getName(), request);
       }
     });
   }
@@ -159,7 +172,7 @@ public class ContentPanel extends Composite {
       }
       public void onSuccess(Void success) {
         removeSelectedRequest();
-        disableDeleteRequestButton();
+        selectLastRequest();
       }
     });
   }
@@ -237,13 +250,8 @@ public class ContentPanel extends Composite {
   private void loadRequestTextArea() {
     requestTextArea = new TextArea();
     requestTextArea.setGrow(true);
-    requestTextArea.setGrowMax(240);
+    requestTextArea.setGrowMax(300);
     requestTextArea.setWidth("100%");
-    requestTextArea.addKeyPressListener(new EventCallback() {
-      public void execute(com.gwtext.client.core.EventObject eventObject) {
-        selectDefaultRequestIfChanged();
-      }
-    });
     requestTextAreaDiv.insertFirst(requestTextArea.getElement());
   }
 
@@ -251,7 +259,7 @@ public class ContentPanel extends Composite {
     responseTextArea = new TextArea();
     responseTextArea.setReadOnly(true);
     responseTextArea.setGrow(true);
-    responseTextArea.setGrowMax(240);
+    responseTextArea.setGrowMax(300);
     responseTextArea.setWidth("100%");
     responseTextAreaDiv.insertFirst(responseTextArea.getElement());
   }
@@ -277,8 +285,12 @@ public class ContentPanel extends Composite {
   }
 
   private Request getCurrentRequest() {
-    return getSelectedRequestIndex() > 0 ?
-      getSelectedRequest() : new Request("Default", requestTextArea.getText());
+    return isFirstRequestSelected() ?
+      new Request("Default", requestTextArea.getText()) : getSelectedRequest();
+  }
+
+  private String getCurrentPayload() {
+    return requestTextArea.getText();
   }
 
   private Request getSelectedRequest() {
@@ -289,7 +301,7 @@ public class ContentPanel extends Composite {
     return requestList.getItemText(getSelectedRequestIndex());
   }
 
-  private String getSelectedRequestPayload() {
+  private String getSelectedPayload() {
     return getSelectedRequest().getPayload();
   }
 
@@ -297,31 +309,13 @@ public class ContentPanel extends Composite {
     return requestList.getSelectedIndex();
   }
 
-  private void selectDefaultRequestIfChanged() {
-    if (hasRequestChanged())
-      selectFirstRequest();
-  }
-
-  private void selectFirstRequest() {
-    requestList.setSelectedIndex(0);
-    disableDeleteRequestButton();
+  private boolean isFirstRequestSelected() {
+    return getSelectedRequestIndex() == 0;
   }
 
   private void selectLastRequest() {
     int lastIndex = requestList.getItemCount() - 1;
     requestList.setSelectedIndex(lastIndex);
-  }
-
-  private boolean hasRequestChanged() {
-    return !requestTextArea.getText().equals(getSelectedRequestPayload());
-  }
-
-  private void enableDeleteRequestButton() {
-    deleteRequestButton.setEnabled(true);
-  }
-
-  private void disableDeleteRequestButton() {
-    deleteRequestButton.setEnabled(false);
   }
 
   private String askNewRequestName() {

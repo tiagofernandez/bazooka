@@ -1,3 +1,9 @@
+## 1.1-SNAPSHOT
+
+* Tweaked the user interface in order to make it more intuitive
+* Refactored the scripting engine code
+* Implemented a XML formatting utility
+
 ## 1.0 (2009-11-30)
 
 * Integrated a Groovy engine in order to compile and evaluate scripts
