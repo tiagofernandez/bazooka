@@ -103,7 +103,10 @@ public class ContentPanel extends Composite {
 
   @UiHandler("requestList")
   void onRequestListChanged(ChangeEvent event) {
-    requestTextArea.setValue(getSelectedPayload());
+    if (isFirstRequestSelected())
+      clearRequestTextArea();
+    else
+      requestTextArea.setValue(getSelectedPayload());
   }
 
   @UiHandler("requestList")
@@ -172,7 +175,6 @@ public class ContentPanel extends Composite {
       }
       public void onSuccess(Void success) {
         removeSelectedRequest();
-        selectLastRequest();
       }
     });
   }
@@ -272,7 +274,7 @@ public class ContentPanel extends Composite {
   private void removeSelectedRequest() {
     requestList.removeItem(getSelectedRequestIndex());
     requests.remove(getSelectedRequestName());
-    requestTextArea.setValue("");
+    clearRequestTextArea();
   }
 
   private boolean containsRequest(String name) {
@@ -291,6 +293,10 @@ public class ContentPanel extends Composite {
 
   private String getCurrentPayload() {
     return requestTextArea.getText();
+  }
+
+  private void clearRequestTextArea() {
+    requestTextArea.setValue("");
   }
 
   private Request getSelectedRequest() {
