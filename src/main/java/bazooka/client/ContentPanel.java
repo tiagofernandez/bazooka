@@ -6,6 +6,7 @@ import bazooka.common.model.*;
 import bazooka.common.service.*;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.Window;
@@ -33,6 +34,7 @@ public class ContentPanel extends Composite {
   @UiField Button saveRequestAsButton;
   @UiField Button shootButton;
   @UiField Image loadingImage;
+  @UiField SpanElement textAreaSpan;
   @UiField DivElement requestTextAreaDiv;
   @UiField DivElement responseTextAreaDiv;
 
@@ -103,6 +105,9 @@ public class ContentPanel extends Composite {
 
   @UiHandler("requestList")
   void onRequestListChanged(ChangeEvent event) {
+    clearResponseTextArea();
+    enableSaveRequestButton();
+    
     if (isFirstRequestSelected())
       clearRequestTextArea();
     else
@@ -164,6 +169,7 @@ public class ContentPanel extends Composite {
       }
       public void onSuccess(Request request) {
         requests.put(request.getName(), request);
+        disableSaveRequestButton();
       }
     });
   }
@@ -208,10 +214,14 @@ public class ContentPanel extends Composite {
 
   void showScriptPanel() {
     scriptPanel.setVisible(true);
+    scriptTextArea.autoSize();
+    scriptTextArea.focus();
   }
 
   void showMessagePanel() {
     messagePanel.setVisible(true);
+    requestTextArea.autoSize();
+    requestTextArea.focus();
   }
 
   void hideScriptPanel() {
@@ -220,6 +230,14 @@ public class ContentPanel extends Composite {
 
   void hideMessagePanel() {
     messagePanel.setVisible(false);
+  }
+  
+  void enableSaveRequestButton() {
+    saveRequestButton.setEnabled(true);
+  }
+  
+  void disableSaveRequestButton() {
+    saveRequestButton.setEnabled(false);
   }
 
   void setShooterPanel(ShooterPanel shooterPanel) {
@@ -243,17 +261,22 @@ public class ContentPanel extends Composite {
   private void loadScriptTextArea() {
     scriptTextArea = new TextArea();
     scriptTextArea.setGrow(true);
-    scriptTextArea.setGrowMin(300);
-    scriptTextArea.setGrowMax(550);
     scriptTextArea.setWidth("100%");
+    scriptTextArea.setStyleName(textAreaSpan.getClassName());
     scriptTextAreaDiv.insertFirst(scriptTextArea.getElement());
   }
 
   private void loadRequestTextArea() {
     requestTextArea = new TextArea();
     requestTextArea.setGrow(true);
-    requestTextArea.setGrowMax(300);
+    requestTextArea.setGrowMax(400);
     requestTextArea.setWidth("100%");
+    requestTextArea.setStyleName(textAreaSpan.getClassName());
+    requestTextArea.addKeyPressListener(new com.gwtext.client.core.EventCallback() {
+      public void execute(com.gwtext.client.core.EventObject event) {
+        enableSaveRequestButton();
+      }
+    });
     requestTextAreaDiv.insertFirst(requestTextArea.getElement());
   }
 
@@ -261,8 +284,8 @@ public class ContentPanel extends Composite {
     responseTextArea = new TextArea();
     responseTextArea.setReadOnly(true);
     responseTextArea.setGrow(true);
-    responseTextArea.setGrowMax(300);
     responseTextArea.setWidth("100%");
+    responseTextArea.setStyleName(textAreaSpan.getClassName());
     responseTextAreaDiv.insertFirst(responseTextArea.getElement());
   }
 
@@ -297,6 +320,10 @@ public class ContentPanel extends Composite {
 
   private void clearRequestTextArea() {
     requestTextArea.setValue("");
+  }
+
+  private void clearResponseTextArea() {
+    responseTextArea.setValue("");
   }
 
   private Request getSelectedRequest() {

@@ -84,7 +84,7 @@ public class ConfigurationPanel extends Composite {
   @UiHandler("addParamButton")
   void onAddParamClicked(ClickEvent event) {
     addParameter("", "");
-    addParamButton.setFocus(false);
+    addParamButton.setFocus(true);
     enableSaveButton();
   }
 
@@ -277,26 +277,11 @@ public class ConfigurationPanel extends Composite {
   private HorizontalPanel buildParameterEntry(String key, String value) {
     HorizontalPanel entry = new HorizontalPanel();
     entry.setSpacing(5);
-    entry.add(buildParameterKeyTextBox(key));
+    entry.add(buildParameterTextBox(key));
     entry.add(buildEqualsLabel());
-    entry.add(buildParameterValueTextBox(value));
+    entry.add(buildParameterTextBox(value));
     entry.add(buildRemoveParameterButton(entry));
     return entry;
-  }
-
-  private TextBox buildParameterKeyTextBox(String key) {
-    return buildParameterTextBox(key);
-  }
-
-  private TextBox buildParameterValueTextBox(String key) {
-    TextBox valueBox = buildParameterTextBox(key);
-    valueBox.addKeyPressHandler(new KeyPressHandler() {
-      public void onKeyPress(KeyPressEvent event) {
-        if (KeyCodes.KEY_TAB == event.getCharCode())
-          onAddParamClicked(null);
-      }
-    });
-    return valueBox;
   }
 
   private TextBox buildParameterTextBox(String text) {

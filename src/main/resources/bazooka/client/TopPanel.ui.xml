@@ -7,14 +7,11 @@
 
   <g:HTMLPanel>
     <div class="{style.banner}">
-      <div>
-        <b class="{style.title}">Bazooka</b>
-      </div>
-      <div>
-        <g:Anchor href='javascript:;' ui:field='aboutLink'>About</g:Anchor>
-      </div>
+      <g:Anchor href="javascript:;" ui:field="aboutLink">
+        <img src="images/bazooka.jpg" height="58px" width="264px"/>
+      </g:Anchor>
     </div>
-    <div class='{style.logo}'/>
+    <div class="{style.logo}"/>
   </g:HTMLPanel>
 
 </ui:UiBinder>

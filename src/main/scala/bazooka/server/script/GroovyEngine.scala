@@ -74,11 +74,11 @@ object GroovyEngine {
     new Callable[Object] {
       def call() = {
         try {
-          createScriptContext(script)
+          setBindings(script)
           compiledScript.eval()
         }
         finally {
-          destroyScriptContext
+          resetBindings
         }
       }
     }
@@ -88,28 +88,25 @@ object GroovyEngine {
     new Callable[Object]() {
       def call() = {
         try {
-          createScriptContext(script)
+          setBindings(script)
           engine.eval(script.code)
         }
         finally {
-          destroyScriptContext
+          resetBindings
         }
       }
     }
   }
 
-  private def createScriptContext(script: GroovyScript) {
-    val bindings = script.createBindings()
-    bindings.put(ScriptEngine.FILENAME, script.name)
-
+  private def setBindings(script: GroovyScript) {
     val context = new SimpleScriptContext
-    context.setBindings(bindings, ScriptContext.ENGINE_SCOPE)
+    context.setBindings(script.createBindings, ScriptContext.ENGINE_SCOPE)
 
     engine.setContext(context)
   }
 
-  private def destroyScriptContext() {
-    engine.getContext.getBindings(ScriptContext.ENGINE_SCOPE).clear()
+  private def resetBindings() {
+    engine.setContext(new SimpleScriptContext)
   }
 
   private def ensureScriptIsValid(script: GroovyScript) {

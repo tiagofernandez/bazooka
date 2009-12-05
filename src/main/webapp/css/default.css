@@ -1,7 +1,3 @@
-body, table {
-  font-size: small;
-}
-
 body {
   background: #fff;
   color: black;
@@ -10,12 +6,25 @@ body {
   overflow: hidden;
 }
 
+body, table {
+  font-size: small;
+}
+
 a {
   color: #000;
 }
 
 a:visited {
   color: #000;
+}
+
+.gwt-Button {
+  cursor: pointer;
+  font-family: Tahoma, Verdana;
+}
+
+.gwt-Button[disabled] {
+  cursor: auto;
 }
 
 .gwt-DialogBox {
@@ -42,12 +51,4 @@ a:visited {
 
 .gwt-DialogBox .gwt-Button {
   margin: 10px;
-}
-
-.gwt-Button {
-  cursor: pointer;
-}
-
-.gwt-Button[disabled] {
-  cursor: auto;
 }

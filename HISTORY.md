@@ -1,8 +1,9 @@
 ## 1.1-SNAPSHOT
 
-* Tweaked the user interface in order to make it more intuitive
 * Refactored the scripting engine code
+* Added 'requests' binding variable containing all requests
 * Implemented a XML formatting utility
+* Tweaked the user interface
 
 ## 1.0 (2009-11-30)
 

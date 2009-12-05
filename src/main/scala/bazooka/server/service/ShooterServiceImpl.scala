@@ -15,24 +15,26 @@ import scala.collection.jcl.Conversions._
 
 class ShooterServiceImpl extends ShooterService {
 
-  var repo: ShooterRepository = _
+  var shooterRepo: ShooterRepository = _
+  var requestRepo: RequestRepository = _
 
   @Inject
   def initRepositories(em: Provider[EntityManager]) {
-    repo = new ShooterRepository(em)
+    shooterRepo = new ShooterRepository(em)
+    requestRepo = new RequestRepository(em)
   }
 
   @Transactional
   def saveShooter(shooter: Shooter) = {
     assumeShooterNotExists(shooter.getName)
-    repo.persist(shooter)
+    shooterRepo.persist(shooter)
     shooter
   }
 
   @Transactional
   def updateShooter(shooter: Shooter) = {
     assumeShooterExists(shooter.getName)
-    repo.merge(shooter)
+    shooterRepo.merge(shooter)
     shooter
   }
 
@@ -40,22 +42,23 @@ class ShooterServiceImpl extends ShooterService {
   def deleteShooter(shooter: Shooter) {
     val name = shooter.getName
     assumeShooterExists(name)
-    repo.remove(repo.getShooterByName(name))
+    shooterRepo.remove(shooterRepo.getShooterByName(name))
   }
 
   def getShooter(name: String) = {
     assumeShooterExists(name)
-    repo.getShooterByName(name)
+    shooterRepo.getShooterByName(name)
   }
 
   def listShooters() = {
-    repo.listShooters
+    shooterRepo.listShooters
   }
 
   def shoot(shooter: Shooter, request: Request, config: Configuration) = {
     val script = new GroovyScript(shooter.getName + " : " + request.getName, shooter.getScript)
 
     script.parameters.put("request", request.getPayload)
+    script.parameters.put("requests", requestRepo.listRequests)
     script.parameters.put("parameters", config.getParameters)
 
     if (config.hasParameters())
@@ -71,12 +74,12 @@ class ShooterServiceImpl extends ShooterService {
   }
 
   private def assumeShooterNotExists(name: String) {
-    if (repo.shooterExists(name))
+    if (shooterRepo.shooterExists(name))
       throw new ExistingShooterException
   }
 
   private def assumeShooterExists(name: String) {
-    if (!repo.shooterExists(name))
+    if (!shooterRepo.shooterExists(name))
       throw new NonExistingShooterException
   }
 }

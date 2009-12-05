@@ -15,6 +15,7 @@
           <g:Button ui:field="cancelButton">Cancel</g:Button>
         </div>
         <div class="{style.textWrapper}" ui:field="scriptTextAreaDiv"/>
+        <span class="{style.textArea}" ui:field="textAreaSpan"/>
       </g:HTMLPanel>
 
       <g:HTMLPanel ui:field="messagePanel" visible="true">
@@ -26,7 +27,7 @@
         </div>
         <div class="{style.textWrapper}" ui:field="requestTextAreaDiv"/>
         <div style="padding-top: 0.8em;">
-          <g:Button ui:field="saveRequestButton">Save</g:Button>
+          <g:Button ui:field="saveRequestButton" enabled="false">Save</g:Button>
           <g:Button ui:field="saveRequestAsButton">Save as</g:Button>
           <g:Button ui:field="shootButton">Take a shot!</g:Button>
           <g:Image ui:field="loadingImage" url="images/loading.gif" styleName="{style.image}" width="16" height="16" visible="false"/>
