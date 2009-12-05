@@ -28,17 +28,17 @@ Write your own shooter
 
 HTTP Shooter:
 
-import org.apache.commons.httpclient.*
-import org.apache.commons.httpclient.methods.*
+    import org.apache.commons.httpclient.*
+    import org.apache.commons.httpclient.methods.*
 
-method = new GetMethod(url)
+    method = new GetMethod(url)
 
-new HttpClient().executeMethod(method)
-response = new String(method.responseBody)
+    new HttpClient().executeMethod(method)
+    response = new String(method.responseBody)
 
-method.releaseConnection()
+    method.releaseConnection()
 
-response
+    response
 
 
 Bound variables
@@ -50,10 +50,10 @@ Bound variables
 PS: Additionally, each parameter is individually put as binding variables.
 
 
-Tips
+XML formatting
 ------
 
-XML formatting: bazooka.server.util.XmlFormatter.format '<foo><bar>abc</bar></foo>'
+    bazooka.server.util.XmlFormatter.format '<foo><bar>abc</bar></foo>'
 
 
 Author
