@@ -44,10 +44,13 @@ HTTP Shooter:
 Bound variables
 ------
 
+Each time you take a shot, the following variables are bound to the scripting context:
+
 * request: the provided payload
+* requests: a list containing the existing requests
 * parameters: a map containing the provided parameters
 
-PS: Additionally, each parameter is individually put as binding variables.
+Additionally, each parameter is individually set as binding variable.
 
 
 XML formatting
