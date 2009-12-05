@@ -1,4 +1,4 @@
-## 1.1
+## 1.1 (2009-12-05)
 
 * Refactored the scripting engine code
 * Added 'requests' binding variable containing all requests
