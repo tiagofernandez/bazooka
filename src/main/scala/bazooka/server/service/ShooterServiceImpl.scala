@@ -59,7 +59,7 @@ class ShooterServiceImpl extends ShooterService {
 
     script.parameters.put("request", request.getPayload)
     script.parameters.put("requests", requestRepo.listRequests)
-    script.parameters.put("parameters", config.getParameters)
+    script.parameters.put("parameters", config.getParametersMap)
 
     if (config.hasParameters())
       convertList(config.getParameters).foreach ( param =>
