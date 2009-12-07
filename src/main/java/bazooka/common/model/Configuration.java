@@ -76,6 +76,16 @@ public class Configuration implements Serializable {
     return parameters;
   }
 
+  public Map<String, String> getParametersMap() {
+    Map<String, String> paramsMap = new HashMap<String, String>();
+    
+    if (parameters != null)
+      for (Parameter param : parameters)
+        paramsMap.put(param.getKey(), param.getValue());
+    
+    return paramsMap;
+  }
+
   public void setParameters(List<Parameter> parameters) {
     this.parameters = parameters;
   }
