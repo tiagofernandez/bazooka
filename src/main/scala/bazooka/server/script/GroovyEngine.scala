@@ -73,13 +73,8 @@ object GroovyEngine {
   private def createCompilableCallable(compiledScript: CompiledScript, script: GroovyScript) = {
     new Callable[Object] {
       def call() = {
-        try {
-          setBindings(script)
-          compiledScript.eval()
-        }
-        finally {
-          resetBindings
-        }
+        setContext(script)
+        compiledScript.eval()
       }
     }
   }
@@ -87,26 +82,17 @@ object GroovyEngine {
   private def createInterpretableCallable(script: GroovyScript) = {
     new Callable[Object]() {
       def call() = {
-        try {
-          setBindings(script)
-          engine.eval(script.code)
-        }
-        finally {
-          resetBindings
-        }
+        setContext(script)
+        engine.eval(script.code)
       }
     }
   }
 
-  private def setBindings(script: GroovyScript) {
+  private def setContext(script: GroovyScript) {
     val context = new SimpleScriptContext
     context.setBindings(script.createBindings, ScriptContext.ENGINE_SCOPE)
 
     engine.setContext(context)
-  }
-
-  private def resetBindings() {
-    engine.setContext(new SimpleScriptContext)
   }
 
   private def ensureScriptIsValid(script: GroovyScript) {
