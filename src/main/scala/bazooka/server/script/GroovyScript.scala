@@ -15,9 +15,7 @@ class GroovyScript(scriptName: String, scriptCode: String) {
   def this() = this(null, null)
 
   def createBindings() = {
-    val bindings = new SimpleBindings(new HashMap[String, Object](parameters))
-    bindings.put(ScriptEngine.FILENAME, name)
-    bindings
+    new SimpleBindings(new HashMap[String, Object](parameters))
   }
 
   override def equals(obj: Any) = {
