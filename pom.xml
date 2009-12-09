@@ -16,12 +16,12 @@
       <name>Tiago Fernandez</name>
       <email>tiago182@gmail.com</email>
       <url>http://tiagofernandez.blogspot.com</url>
-      <timezone>-3</timezone>
+      <timezone>+1</timezone>
     </developer>
   </developers>
 
   <properties>
-    <gwtHome>${basedir}/../../Toolbox/gwt-2.0.0-rc2</gwtHome>
+    <gwtHome>${basedir}/../../Toolbox/gwt-2.0.0</gwtHome>
   </properties>
 
   <build>
@@ -158,21 +158,21 @@
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-dev</artifactId>
-      <version>2.0.0-rc2</version>
+      <version>2.0.0</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-servlet</artifactId>
-      <version>2.0.0-rc2</version>
+      <version>2.0.0</version>
       <scope>runtime</scope>
     </dependency>
 
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
-      <version>2.0.0-rc2</version>
+      <version>2.0.0</version>
     </dependency>
 
     <dependency>

@@ -88,12 +88,10 @@ object GroovyEngine {
     }
   }
 
-  private def setContext(script: GroovyScript) {
-    val context = new SimpleScriptContext
-    context.setBindings(script.createBindings, ScriptContext.ENGINE_SCOPE)
-
-    engine.setContext(context)
-  }
+	private def setContext(script: GroovyScript) {
+	  engine.put(ScriptEngine.FILENAME, script.name)
+	  engine.setBindings(script.createBindings, ScriptContext.ENGINE_SCOPE)
+	}
 
   private def ensureScriptIsValid(script: GroovyScript) {
     require(script != null, "The script must not be null")

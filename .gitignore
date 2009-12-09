@@ -2,3 +2,4 @@
 target
 target/**/*
 reports
+bazooka.h2.db

@@ -15,10 +15,10 @@ an H2 database, and Groovy 1.6.5 is utilized as scripting engine.
 Get the application running
 ------
 
-* /Toolbox/gwt-2.0.0-rc2
-* /Toolbox/repository/com/google/gwt/gwt-dev/2.0.0-rc2/gwt-dev-2.0.0-rc2.jar
-* /Toolbox/repository/com/google/gwt/gwt-servlet/2.0.0-rc2/gwt-servlet-2.0.0-rc2.jar
-* /Toolbox/repository/com/google/gwt/gwt-user/2.0.0-rc2/gwt-user-2.0.0-rc2.jar
+* /Toolbox/gwt-2.0.0
+* /Toolbox/repository/com/google/gwt/gwt-dev/2.0.0/gwt-dev-2.0.0.jar
+* /Toolbox/repository/com/google/gwt/gwt-servlet/2.0.0/gwt-servlet-2.0.0.jar
+* /Toolbox/repository/com/google/gwt/gwt-user/2.0.0/gwt-user-2.0.0.jar
 * /Toolbox/repository/com/gwtext/gwtext/2.0.5/gwtext-2.0.5.jar
 * /Workspace/bazooka > mvn clean package jetty:run-war
 
