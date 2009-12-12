@@ -55,7 +55,7 @@ class ShooterServiceImpl extends ShooterService {
   }
 
   def shoot(shooter: Shooter, request: Request, config: Configuration) = {
-    val script = new GroovyScript(shooter.getName + " : " + request.getName, shooter.getScript)
+    val script = new GroovyScript(shooter.getScript)
 
     script.parameters.put("request", request.getPayload)
     script.parameters.put("requests", requestRepo.listRequests)
@@ -66,7 +66,7 @@ class ShooterServiceImpl extends ShooterService {
         script.parameters.put(param.getKey, param.getValue))
 
     try {
-      GroovyEngine.compileAndEval(script).toString
+      GroovyEngine.eval(script).toString
     }
     catch {
       case ex => throw new ShootingException(ex.getMessage, ex)

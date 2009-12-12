@@ -5,14 +5,11 @@ import org.apache.commons.lang.builder._
 import javax.script._
 import java.util._
 
-class GroovyScript(scriptName: String, scriptCode: String) {
+class GroovyScript(scriptCode: String) {
 
-  var name: String = scriptName
   var code: String = scriptCode
 
   val parameters: Map[String, Object] = new HashMap[String, Object]
-
-  def this() = this(null, null)
 
   def createBindings() = {
     new SimpleBindings(new HashMap[String, Object](parameters))
@@ -22,7 +19,6 @@ class GroovyScript(scriptName: String, scriptCode: String) {
     if (obj.isInstanceOf[GroovyScript]) {
       val other = obj.asInstanceOf[GroovyScript]
       new EqualsBuilder()
-        .append(this.name, other.name)
         .append(this.code, other.code)
         .isEquals
     }
@@ -32,9 +28,8 @@ class GroovyScript(scriptName: String, scriptCode: String) {
 
   override def hashCode() =
     new HashCodeBuilder()
-      .append(name)
       .append(code)
       .toHashCode
 
-  override def toString() = name
+  override def toString() = code
 }

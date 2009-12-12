@@ -5,33 +5,7 @@ import java.util.concurrent._
 
 object GroovyEngine {
 
-  var engine: ScriptEngine = new ScriptEngineManager().getEngineByName("groovy")
-
-  var timeoutInSeconds: Int = 15
-
-  val compiledScripts = new ConcurrentHashMap[GroovyScript, CompiledScript]
-
-  def compile(script: GroovyScript) {
-    ensureScriptIsValid(script)
-
-    try {
-      if (!isScriptCompiled(script)) {
-        val compiledScript = engine.asInstanceOf[Compilable].compile(script.code)
-        compiledScripts.put(script, compiledScript)
-      }
-    }
-    catch {
-      case ex: Throwable => {
-        val errorMessage = getErrorMessage("Error while compiling script", script, ex)
-        throw new GroovyEngineException(errorMessage, ex)
-      }
-    }
-  }
-
-  def compileAndEval(script: GroovyScript) = {
-    compile(script)
-    eval(script)
-  }
+  val timeoutInSeconds: Int = 15
 
   def eval(script: GroovyScript) = {
     ensureScriptIsValid(script)
@@ -48,6 +22,7 @@ object GroovyEngine {
     catch {
       case ex: Throwable => {
         task.cancel(true)
+        
         val errorMessage = getErrorMessage("Error while evaluating script", script, ex)
         throw new GroovyEngineException(errorMessage, ex)
       }
@@ -57,45 +32,18 @@ object GroovyEngine {
     }
   }
 
-  private def isScriptCompiled(script: GroovyScript) = compiledScripts.containsKey(script)
-
-  private def isScriptNotCompiled(script: GroovyScript) = !isScriptCompiled(script)
-
   private def createCallable(script: GroovyScript) = {
-    val bindings = script.createBindings
-
-    if (isScriptCompiled(script))
-      createCompilableCallable(compiledScripts.get(script), script)
-    else
-      createInterpretableCallable(script)
-  }
-
-  private def createCompilableCallable(compiledScript: CompiledScript, script: GroovyScript) = {
-    new Callable[Object] {
-      def call() = {
-        setContext(script)
-        compiledScript.eval()
-      }
-    }
-  }
-
-  private def createInterpretableCallable(script: GroovyScript) = {
     new Callable[Object]() {
       def call() = {
-        setContext(script)
+        val engine = new ScriptEngineManager().getEngineByName("groovy")
+        engine.setBindings(script.createBindings, ScriptContext.ENGINE_SCOPE)
         engine.eval(script.code)
       }
     }
   }
 
-	private def setContext(script: GroovyScript) {
-	  engine.put(ScriptEngine.FILENAME, script.name)
-	  engine.setBindings(script.createBindings, ScriptContext.ENGINE_SCOPE)
-	}
-
   private def ensureScriptIsValid(script: GroovyScript) {
     require(script != null, "The script must not be null")
-    require(script.name != null, "The script name must not be null")
     require(script.code != null, "The script code must not be null")
   }
 

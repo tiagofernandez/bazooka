@@ -1,11 +1,7 @@
 package bazooka.server.script
 
 it "should evaluate a trivial script", {
-  GroovyEngine.eval(new GroovyScript("OnePlusOne", "1 + 1"))
-}
-
-it "should compile and eval a trivial script", {
-  GroovyEngine.compileAndEval(new GroovyScript("TwoPlusTwo", "2 + 2"))
+  GroovyEngine.eval(new GroovyScript("1 + 1"))
 }
 
 it "should not perform evaluation when invalid scripts are provided", {
@@ -13,7 +9,7 @@ it "should not perform evaluation when invalid scripts are provided", {
 }
 
 it "should not reuse bindings", {
-  times2Script = new GroovyScript("Times2", "number * 2")
+  times2Script = new GroovyScript("number * 2")
   times2Script.parameters.putAll(["number": 2 as Object])
 
   GroovyEngine.eval(times2Script).shouldBe 4
@@ -25,9 +21,5 @@ it "should not reuse bindings", {
 }
 
 it "should not evaluate a broken script", {
-  ensureThrows(GroovyEngineException) { GroovyEngine.eval(new GroovyScript("broken", "<>")) }
-}
-
-it "should not compile a broken script", {
-  ensureThrows(GroovyEngineException) { GroovyEngine.compile(new GroovyScript("broken", "<>")) }
+  ensureThrows(GroovyEngineException) { GroovyEngine.eval(new GroovyScript("<>")) }
 }
