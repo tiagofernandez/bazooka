@@ -52,3 +52,11 @@ a:visited {
 .gwt-DialogBox .gwt-Button {
   margin: 10px;
 }
+
+.gwt-SplitLayoutPanel-HDragger {
+  cursor: col-resize;
+}
+
+.gwt-SplitLayoutPanel-VDragger {
+  cursor: row-resize;
+}

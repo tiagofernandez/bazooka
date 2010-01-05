@@ -16,7 +16,7 @@ import com.gwtext.client.widgets.form.TextArea;
 
 import java.util.*;
 
-public class ContentPanel extends Composite {
+public class ContentPanel extends ResizeComposite {
 
   interface Binder extends UiBinder<Widget, ContentPanel> {}
 

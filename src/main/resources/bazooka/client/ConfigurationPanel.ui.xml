@@ -9,12 +9,15 @@
     <g:VerticalPanel>
 
       <g:HorizontalPanel spacing="5">
-        <g:ListBox ui:field="configList" visibleItemCount="1" selectedIndex="0"/>
         <g:Button ui:field="saveButton" enabled="false">Save</g:Button>
         <g:Button ui:field="saveAsButton">Save as</g:Button>
         <g:Button ui:field="deleteButton">Delete</g:Button>
       </g:HorizontalPanel>
 
+      <g:HorizontalPanel spacing="5">
+        <g:ListBox ui:field="configList" visibleItemCount="1" selectedIndex="0"/>
+      </g:HorizontalPanel>
+      
       <g:VerticalPanel spacing="5" ui:field="parametersPanel"/>
 
       <g:HorizontalPanel spacing="5">
