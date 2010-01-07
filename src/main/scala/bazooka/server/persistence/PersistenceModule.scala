@@ -3,9 +3,7 @@ package bazooka.server.persistence
 import com.google.inject._
 import com.wideplay.warp.persist.jpa._
 
-class PersistenceModule(persistenceUnitName: String) extends AbstractModule {
-
-  val unitName = persistenceUnitName
+class PersistenceModule(val unitName: String) extends AbstractModule {
 
   override def configure() {
     bindConstant.annotatedWith(classOf[JpaUnit]).to(unitName)

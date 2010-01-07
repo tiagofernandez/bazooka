@@ -5,9 +5,7 @@ import org.apache.commons.lang.builder._
 import javax.script._
 import java.util._
 
-class GroovyScript(scriptCode: String) {
-
-  var code: String = scriptCode
+class GroovyScript(val code: String) {
 
   val parameters: Map[String, Object] = new HashMap[String, Object]
 
