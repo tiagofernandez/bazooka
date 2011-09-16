@@ -28,18 +28,19 @@ Write your own shooter
 
 HTTP Shooter:
 
-    import org.apache.commons.httpclient.*
-    import org.apache.commons.httpclient.methods.*
+```groovy
+import org.apache.commons.httpclient.*
+import org.apache.commons.httpclient.methods.*
 
-    method = new GetMethod(url)
+method = new GetMethod(url)
 
-    new HttpClient().executeMethod(method)
-    response = new String(method.responseBody)
+new HttpClient().executeMethod(method)
+response = new String(method.responseBody)
 
-    method.releaseConnection()
+method.releaseConnection()
 
-    response
-
+response
+```
 
 Bound variables
 ------
@@ -56,8 +57,9 @@ Additionally, each parameter is individually set as binding variable.
 XML formatting
 ------
 
-    bazooka.server.util.XmlFormatter.format '<foo><bar>abc</bar></foo>'
-
+```groovy
+bazooka.server.util.XmlFormatter.format '<foo><bar>abc</bar></foo>'
+```
 
 Author
 ------
